@@ -8,6 +8,8 @@ import com.mrugas.flyingsimulator.ShaderHelper;
 import com.mrugas.flyingsimulator.managers.ShaderManger;
 import com.mrugas.flyingsimulator.models.BaseModel;
 import com.mrugas.flyingsimulator.models.Model;
+import com.mrugas.flyingsimulator.models.PlaneModel;
+import com.mrugas.flyingsimulator.models.TexturedModel;
 
 import org.apache.commons.io.IOUtils;
 
@@ -26,7 +28,7 @@ public class Scene {
             String vertexShader, fragmentShader;
             InputStream inputStream = context.getResources().openRawResource(R.raw.simple_vertex_shader);
             vertexShader = IOUtils.toString(inputStream, "UTF-8");
-            inputStream = context.getResources().openRawResource(R.raw.simple_fragment_shader);
+            inputStream = context.getResources().openRawResource(R.raw.texture_fragment_shader);
             fragmentShader = IOUtils.toString(inputStream, "UTF-8");
             int fragHand = ShaderHelper.compileShader(GLES20.GL_FRAGMENT_SHADER,fragmentShader);
             int vertHand = ShaderHelper.compileShader(GLES20.GL_VERTEX_SHADER,vertexShader);
@@ -39,7 +41,7 @@ public class Scene {
         }
 
         GLES20.glUseProgram(ShaderManger.getInstance().getProgramHandle("simple_program"));
-        models.put("plane",new Model(R.raw.teapot2,ShaderManger.getInstance().getProgramHandle("simple_program"),context));
+        models.put("plane", new PlaneModel(ShaderManger.getInstance().getProgramHandle("simple_program"), context));
     }
 
     void draw(){

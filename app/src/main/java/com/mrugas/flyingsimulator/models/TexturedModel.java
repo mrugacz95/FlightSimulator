@@ -8,40 +8,41 @@ import android.os.SystemClock;
 import com.mrugas.flyingsimulator.R;
 import com.mrugas.flyingsimulator.Utilities.Camera;
 import com.mrugas.flyingsimulator.Utilities.ObjParser.OBJParser;
+import com.mrugas.flyingsimulator.managers.Texture;
+import com.mrugas.flyingsimulator.managers.TextureManager;
 
 import java.nio.FloatBuffer;
 
 /**
  * Created by mruga on 01.08.2016.
  */
-public class TexturedModel implements BaseModel {
+public abstract class TexturedModel implements BaseModel {
     static public int BYTES_PER_FLOAT = 4;
-    private FloatBuffer vertexBuffer;
-    private FloatBuffer uvBuffer;
-    private int mPositionHandle,
+    protected FloatBuffer vertexBuffer;
+    protected FloatBuffer uvBuffer;
+    protected int mPositionHandle,
             mMVPMatrixHandle,
             mColorHandle,
             mTextureUniformHandle,
             mTextureCoordinateHandle,
-            mGlobaColorHandle;
-    private float[] mModelMatrix = new float[16];
-    private float[] mMVPMatrix = new float[16];
-    private int vertexCount;
-    public TexturedModel(int resId, int programHandle, Context context){
+            mGlobaColorHandle,
+            mTextureDataHandle;
+    protected float[] mModelMatrix = new float[16];
+    protected float[] mMVPMatrix = new float[16];
+    protected int vertexCount;
+    public TexturedModel(int programHandle, Context context){
+
+        int textureResId = getTextureId();
+        Texture texture = new Texture(context,textureResId);
+        TextureManager.getInstance().addTexture("plane_texture",texture);
+        mTextureDataHandle = texture.getTextureDataHandle();
 
 
         OBJParser parser = new OBJParser(context);
-        parser.parseOBJ(R.raw.plane);
+        parser.parseOBJ(getMeshResourceId());
         vertexCount = parser.getVertexCount();
         vertexBuffer = parser.getVertexBuffer();
         uvBuffer = parser.getUVBuffer();
-//        vertexBuffer = ByteBuffer.allocateDirect(Cube.vertices.length * BYTES_PER_FLOAT).order(ByteOrder.nativeOrder()).asFloatBuffer();
-//        vertexBuffer.put(Cube.vertices);
-//        vertexBuffer.position(0);
-
-//        uvBuffer = ByteBuffer.allocateDirect(Triangle.colors.length * BYTES_PER_FLOAT).order(ByteOrder.nativeOrder()).asFloatBuffer();
-//        uvBuffer.put(Triangle.colors);
-//        uvBuffer.position(0);
 
         mPositionHandle = GLES20.glGetAttribLocation(programHandle, "a_Position");
         mMVPMatrixHandle = GLES20.glGetUniformLocation(programHandle, "u_MVPMatrix");
@@ -62,14 +63,19 @@ public class TexturedModel implements BaseModel {
         GLES20.glEnableVertexAttribArray(mPositionHandle);
 
 
-        GLES20.glVertexAttribPointer(mPositionHandle, 3, GLES20.GL_FLOAT, false,
-                0, vertexBuffer);
-        GLES20.glEnableVertexAttribArray(mPositionHandle);
 
 
-//        GLES20.glVertexAttribPointer(mColorHandle, 4, GLES20.GL_FLOAT, false,
-//                0, colorBuffer);
-//        GLES20.glEnableVertexAttribArray(mColorHandle);
+        GLES20.glVertexAttribPointer(mTextureCoordinateHandle, 2, GLES20.GL_FLOAT, false,
+                0, uvBuffer);
+        GLES20.glEnableVertexAttribArray(mTextureCoordinateHandle);
+
+        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+
+        // Bind the texture to this unit.
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mTextureDataHandle);
+
+        // Tell the texture uniform sampler to use this texture in the shader by binding to texture unit 0.
+        GLES20.glUniform1i(mTextureUniformHandle, 0);
 
 
         long time = SystemClock.uptimeMillis() % 10000L;
@@ -87,4 +93,5 @@ public class TexturedModel implements BaseModel {
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertexCount);
 
     }
+    abstract int getTextureId();
 }

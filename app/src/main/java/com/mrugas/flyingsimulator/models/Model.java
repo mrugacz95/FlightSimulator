@@ -16,7 +16,7 @@ import java.nio.FloatBuffer;
 /**
  * Created by Mrugi on 2016-07-10.
  */
-public class Model implements BaseModel {
+public abstract class Model implements BaseModel {
     static public int BYTES_PER_FLOAT = 4;
     private FloatBuffer vertexBuffer;
     private FloatBuffer uvBuffer;

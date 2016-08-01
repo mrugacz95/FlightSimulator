@@ -58,7 +58,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
     public GLES20Renderer(Context context) {
 
         this.context = context;
-        myModel = new Model(R.raw.teapot2,programHandle,context);
+       // myModel = new Model(R.raw.teapot2,programHandle,context);
 
 //        Object3dContainer obj = min3dParser.getParsedObject();
 //        model = parser.parseOBJ(R.raw.cube);
@@ -188,8 +188,8 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
     @Override
     public void onDrawFrame(GL10 glUnused) {
         GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
-        //SceneManager.getInstance().draw();
-        myModel.draw();
+        SceneManager.getInstance().draw();
+       // myModel.draw();
 
 //        myModel.draw();
     }

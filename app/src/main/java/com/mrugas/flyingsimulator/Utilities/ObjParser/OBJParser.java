@@ -240,16 +240,16 @@ public class OBJParser {
     }
 
     public FloatBuffer getUVBuffer() {
-        FloatBuffer UVBuffer = ByteBuffer.allocateDirect(vPointer.size() * BYTES_PER_FLOAT * 3).order(ByteOrder.nativeOrder()).asFloatBuffer();
+        FloatBuffer UVBuffer = ByteBuffer.allocateDirect(vPointer.size() * BYTES_PER_FLOAT * 2).order(ByteOrder.nativeOrder()).asFloatBuffer();
 //        vertexBuffer.put(Cube.vertices);
 //        vertexBuffer.position(0);
         List<Float> vertList = new ArrayList<>();
         for(int uvPtr : vtPointer){
-            UVBuffer.put(v.get(uvPtr*2));
-            vertList.add(v.get(uvPtr*2));
+            UVBuffer.put(vt.get(uvPtr*2));
+            vertList.add(vt.get(uvPtr*2));
 
-            UVBuffer.put(v.get(uvPtr*2+1));
-            vertList.add(v.get(uvPtr*2+1));
+            UVBuffer.put(vt.get(uvPtr*2+1));
+            vertList.add(vt.get(uvPtr*2+1));
         }
         UVBuffer.position(0);
         return UVBuffer;

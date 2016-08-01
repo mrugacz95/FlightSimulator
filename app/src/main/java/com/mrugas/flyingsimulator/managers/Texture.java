@@ -12,7 +12,7 @@ public class Texture {
 
     private int textureDataHandle;
 
-    Texture(Context context, int resId){
+    public Texture(Context context, int resId){
         textureDataHandle = TextureHelper.loadTexture(context,resId);
     }
 

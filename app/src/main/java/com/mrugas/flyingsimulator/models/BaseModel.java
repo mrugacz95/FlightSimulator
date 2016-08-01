@@ -5,4 +5,6 @@ package com.mrugas.flyingsimulator.models;
  */
 public interface BaseModel {
     public void draw();
+    int getMeshResourceId();
+
 }
