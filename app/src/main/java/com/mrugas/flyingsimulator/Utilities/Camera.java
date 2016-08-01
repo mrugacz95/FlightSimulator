@@ -52,4 +52,8 @@ public class Camera {
 
         Matrix.multiplyMM(mVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
     }
+
+    public static void rotate(int degree, float x, float y, float z) {
+        Matrix.rotateM(mViewMatrix, 0, degree, x, y, z);
+    }
 }

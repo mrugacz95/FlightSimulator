@@ -77,13 +77,7 @@ public abstract class TexturedModel implements BaseModel {
         // Tell the texture uniform sampler to use this texture in the shader by binding to texture unit 0.
         GLES20.glUniform1i(mTextureUniformHandle, 0);
 
-
-        long time = SystemClock.uptimeMillis() % 10000L;
-        float angleInDegrees = (360.0f / 10000.0f) * ((int) time);
-
         Matrix.setIdentityM(mModelMatrix, 0);
-        Matrix.rotateM(mModelMatrix, 0, angleInDegrees, 0.9f, 0.5f, 1.0f);
-
         Matrix.multiplyMM(mMVPMatrix, 0, Camera.getmViewMatrix(), 0, mModelMatrix, 0);
 
         Matrix.multiplyMM(mMVPMatrix, 0, Camera.getmProjectionMatrix(), 0, mMVPMatrix, 0);

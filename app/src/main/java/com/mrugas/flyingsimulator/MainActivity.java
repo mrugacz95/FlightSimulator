@@ -38,7 +38,9 @@ public class MainActivity extends Activity {
             mGLView = new GLSurfaceView(this);
             mGLView.setEGLContextClientVersion(2);
             mGLView.setPreserveEGLContextOnPause(true);
-            mGLView.setRenderer(new GLES20Renderer(this));
+            GLES20Renderer renderer = new GLES20Renderer(this);
+            mGLView.setRenderer(renderer);
+            mGLView.setOnTouchListener(new TouchListener(renderer));
         } else {
             Toast.makeText(this,"Buy new phone",Toast.LENGTH_LONG).show();
             this.finish();
