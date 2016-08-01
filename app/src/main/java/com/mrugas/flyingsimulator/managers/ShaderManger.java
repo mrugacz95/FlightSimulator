@@ -7,13 +7,21 @@ import java.util.HashMap;
  */
 public class ShaderManger {
 
-    private ShaderManger shaderManger = null;
-    HashMap<String,Integer> programs;
+    static private ShaderManger shaderManger = null;
+    HashMap<String,Integer> programs = new HashMap<>();
 
-    public ShaderManger getInstance(){
+    static public ShaderManger getInstance(){
         if(shaderManger==null)
             shaderManger=new ShaderManger();
         return shaderManger;
+    }
+
+    public int getProgramHandle(String name){
+        return programs.get(name);
+    }
+
+    public void addProgram(String name, int programHandler){
+        programs.put(name,programHandler);
     }
 
 

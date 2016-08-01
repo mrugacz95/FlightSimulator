@@ -239,6 +239,22 @@ public class OBJParser {
         return vertexBuffer;
     }
 
+    public FloatBuffer getUVBuffer() {
+        FloatBuffer UVBuffer = ByteBuffer.allocateDirect(vPointer.size() * BYTES_PER_FLOAT * 3).order(ByteOrder.nativeOrder()).asFloatBuffer();
+//        vertexBuffer.put(Cube.vertices);
+//        vertexBuffer.position(0);
+        List<Float> vertList = new ArrayList<>();
+        for(int uvPtr : vtPointer){
+            UVBuffer.put(v.get(uvPtr*2));
+            vertList.add(v.get(uvPtr*2));
+
+            UVBuffer.put(v.get(uvPtr*2+1));
+            vertList.add(v.get(uvPtr*2+1));
+        }
+        UVBuffer.position(0);
+        return UVBuffer;
+    }
+
     public int getVertexCount() {
         return vPointer.size();
     }

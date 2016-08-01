@@ -9,25 +9,25 @@ import com.mrugas.flyingsimulator.R;
 import com.mrugas.flyingsimulator.Utilities.Camera;
 import com.mrugas.flyingsimulator.Utilities.ObjParser.OBJParser;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
 /**
- * Created by Mrugi on 2016-07-10.
+ * Created by mruga on 01.08.2016.
  */
-public class Model implements BaseModel {
+public class TexturedModel implements BaseModel {
     static public int BYTES_PER_FLOAT = 4;
     private FloatBuffer vertexBuffer;
     private FloatBuffer uvBuffer;
     private int mPositionHandle,
             mMVPMatrixHandle,
             mColorHandle,
+            mTextureUniformHandle,
+            mTextureCoordinateHandle,
             mGlobaColorHandle;
     private float[] mModelMatrix = new float[16];
     private float[] mMVPMatrix = new float[16];
     private int vertexCount;
-    public Model(int resId, int programHandle, Context context){
+    public TexturedModel(int resId, int programHandle, Context context){
 
 
         OBJParser parser = new OBJParser(context);
@@ -47,6 +47,8 @@ public class Model implements BaseModel {
         mMVPMatrixHandle = GLES20.glGetUniformLocation(programHandle, "u_MVPMatrix");
         mColorHandle = GLES20.glGetAttribLocation(programHandle, "a_Color");
         mGlobaColorHandle = GLES20.glGetAttribLocation(programHandle, "glob_Color");
+        mTextureUniformHandle = GLES20.glGetUniformLocation(programHandle, "u_Texture");
+        mTextureCoordinateHandle = GLES20.glGetAttribLocation(programHandle, "a_TexCoordinate");
 
 
 
@@ -54,6 +56,11 @@ public class Model implements BaseModel {
     }
     @Override
     public void draw() {
+
+        GLES20.glVertexAttribPointer(mPositionHandle, 3, GLES20.GL_FLOAT, false,
+                0, vertexBuffer);
+        GLES20.glEnableVertexAttribArray(mPositionHandle);
+
 
         GLES20.glVertexAttribPointer(mPositionHandle, 3, GLES20.GL_FLOAT, false,
                 0, vertexBuffer);

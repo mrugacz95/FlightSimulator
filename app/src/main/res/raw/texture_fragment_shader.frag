@@ -7,6 +7,6 @@ varying vec2 v_TexCoordinate;
 
 void main()                   	// The entry point for our fragment shader.
 {
-        gl_FragColor = v_Color;      // Pass the color directly through the pipeline.
+        gl_FragColor = texture2D(u_Texture, v_TexCoordinate);      // Pass the color directly through the pipeline.
 
 }
