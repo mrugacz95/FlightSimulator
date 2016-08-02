@@ -41,12 +41,22 @@ public class Scene {
         }
 
         GLES20.glUseProgram(ShaderManger.getInstance().getProgramHandle("simple_program"));
-        models.put("plane", new PlaneModel(ShaderManger.getInstance().getProgramHandle("simple_program"), context));
+        BaseModel cube = new TexturedModel(ShaderManger.getInstance().getProgramHandle("simple_program"),context, R.raw.cube, R.drawable.uv_checker_large);
+        cube.translate(0,-12,0);
+        cube.scale(20,20,20);
+        models.put("cube", cube);
+        BaseModel plane = new PlaneModel(ShaderManger.getInstance().getProgramHandle("simple_program"), context);
+            plane.translate(0,-1,0);
+
+        models.put("plane", plane);
     }
 
     void draw(){
         for(BaseModel model : models.values()){
             model.draw();
         }
+    }
+    public BaseModel getModel(String name){
+        return models.get(name);
     }
 }

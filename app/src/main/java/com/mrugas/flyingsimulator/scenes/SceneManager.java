@@ -18,6 +18,12 @@ public class SceneManager {
     public void addScene(Scene scene){
         scenes.push(scene);
     }
+    public Scene getCurrentScene(){
+        if(!scenes.isEmpty())
+            return scenes.peek();
+        else
+            return null;
+    }
     public void draw(){
         scenes.peek().draw();
     }

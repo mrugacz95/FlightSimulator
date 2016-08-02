@@ -3,24 +3,15 @@ package com.mrugas.flyingsimulator;
 import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
 
 import com.mrugas.flyingsimulator.Utilities.Camera;
-import com.mrugas.flyingsimulator.Utilities.TDModel;
-import com.mrugas.flyingsimulator.Utilities.Util;
 import com.mrugas.flyingsimulator.models.BaseModel;
-import com.mrugas.flyingsimulator.models.Model;
+import com.mrugas.flyingsimulator.models.PlaneModel;
 import com.mrugas.flyingsimulator.scenes.Scene;
 import com.mrugas.flyingsimulator.scenes.SceneManager;
-
-import org.apache.commons.io.IOUtils;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.FloatBuffer;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -80,17 +71,20 @@ public class GLES20Renderer implements GLSurfaceView.Renderer, View.OnTouchListe
                 float dx = x - mPreviousX;
                 float dy = y - mPreviousY;
 
-                // reverse direction of rotation above the mid-line
-                if (y > height / 2) {
-                    dx = dx * -1 ;
+                Scene scene = SceneManager.getInstance().getCurrentScene();
+                if(scene==null) return false;
+                BaseModel plane = scene.getModel("plane");
+                if(plane instanceof PlaneModel){
+                    if (x < width / 2)
+                        ((PlaneModel)plane).setPlaneRotation(-90.f);
+                    else
+                        ((PlaneModel)plane).setPlaneRotation(90.f);
+
                 }
 
-                // reverse direction of rotation to left of the mid-line
-                if (x < width / 2) {
-                    dy = dy * -1 ;
-                }
 
-                Camera.rotate(1,dx,dy,0);
+
+
         }
 
         mPreviousX = x;

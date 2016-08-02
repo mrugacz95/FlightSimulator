@@ -2,12 +2,35 @@ package com.mrugas.flyingsimulator.Utilities;
 
 import android.opengl.Matrix;
 
+import com.mrugas.flyingsimulator.models.PlaneModel;
+import com.mrugas.flyingsimulator.scenes.SceneManager;
+
 /**
  * Created by mruga on 01.08.2016.
  */
 public class Camera {
 
+    static final float eyeX = 0.0f;
+    static final float eyeY = 0.0f;
+    static final float eyeZ = -2.5f;
+
+    static final float lookX = 0.0f;
+    static final float lookY = 0.0f;
+    static final float lookZ = 0.0f;
+
+    static final float upX = 0.0f;
+    static final float upY = 1.0f;
+    static final float upZ = 0.0f;
+
     public static float[] getmViewMatrix() {
+//        float[] view = ((PlaneModel)SceneManager.getInstance().getCurrentScene().getModel("plane")).getModelViewMatrix();
+//
+//        Matrix.invertM(view,0,view,0);
+//        Matrix.translateM(view,0,0.f,0.f,-3.f);
+//        return view;
+        Vector3 pos = ((PlaneModel)SceneManager.getInstance().getCurrentScene().getModel("plane")).getPosition();
+        Vector3 rot = ((PlaneModel)SceneManager.getInstance().getCurrentScene().getModel("plane")).getPosition();
+        Matrix.setLookAtM(mViewMatrix, 0,  pos.x-(float) Math.cos(Math.toRadians(rot.y))*5, pos.y+(float) Math.cos(Math.toRadians(rot.z))*5, pos.z-(float) Math.sin(Math.toRadians(rot.x))*5, pos.x, pos.y, pos.z, upX, upY, upZ);
         return mViewMatrix;
     }
 
@@ -20,7 +43,9 @@ public class Camera {
     static private float[] mVPMatrix = new float[16];
 
     static public float[] getVPMatrix() {
-        return mVPMatrix;
+        float[] view = ((PlaneModel)SceneManager.getInstance().getCurrentScene().getModel("plane")).getModelViewMatrix();
+        Matrix.translateM(view,0,0.f,0.f,-3.f);
+        return view;
     }
     static public void setup(int width, int height){
 
@@ -34,20 +59,9 @@ public class Camera {
 
         Matrix.frustumM( mProjectionMatrix, 0, left, right, bottom, top, near, far);
 
-        final float eyeX = 2.0f;
-        final float eyeY = 0.0f;
-        final float eyeZ = 2.0f;
-
-        final float lookX = -5.0f;
-        final float lookY = 0.0f;
-        final float lookZ = -5.0f;
-
-        final float upX = 0.0f;
-        final float upY = 1.0f;
-        final float upZ = 0.0f;
 
 
-        Matrix.setLookAtM(mViewMatrix, 0, eyeX, eyeY, eyeZ, lookX, lookY, lookZ, upX, upY, upZ);
+
 
 
         Matrix.multiplyMM(mVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);

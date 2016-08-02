@@ -3,7 +3,6 @@ package com.mrugas.flyingsimulator.models;
 import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
-import android.os.SystemClock;
 
 import com.mrugas.flyingsimulator.R;
 import com.mrugas.flyingsimulator.Utilities.Camera;
@@ -16,8 +15,7 @@ import java.nio.FloatBuffer;
 /**
  * Created by mruga on 01.08.2016.
  */
-public abstract class TexturedModel implements BaseModel {
-    static public int BYTES_PER_FLOAT = 4;
+public class TexturedModel extends BaseModel {
     protected FloatBuffer vertexBuffer;
     protected FloatBuffer uvBuffer;
     protected int mPositionHandle,
@@ -26,13 +24,28 @@ public abstract class TexturedModel implements BaseModel {
             mTextureUniformHandle,
             mTextureCoordinateHandle,
             mGlobaColorHandle,
-            mTextureDataHandle;
-    protected float[] mModelMatrix = new float[16];
+            mTextureDataHandle,
+            programHandle;
+    private Context context;
     protected float[] mMVPMatrix = new float[16];
     protected int vertexCount;
+    int textureResId = R.drawable.uv_checker_large;
+    int meshResId = R.raw.cube;
     public TexturedModel(int programHandle, Context context){
+        this.programHandle = programHandle;
+        this.context = context;
+        init();
+    }
 
-        int textureResId = getTextureId();
+    public TexturedModel(int programHandle, Context context, int meshResId, int textureResId){
+        this(programHandle,context);
+        this.meshResId=meshResId;
+        this.textureResId = textureResId;
+        init();
+    }
+    private void init(){
+        textureResId = getTextureResId();
+        meshResId = getMeshResourceId();
         Texture texture = new Texture(context,textureResId);
         TextureManager.getInstance().addTexture("plane_texture",texture);
         mTextureDataHandle = texture.getTextureDataHandle();
@@ -50,14 +63,10 @@ public abstract class TexturedModel implements BaseModel {
         mGlobaColorHandle = GLES20.glGetAttribLocation(programHandle, "glob_Color");
         mTextureUniformHandle = GLES20.glGetUniformLocation(programHandle, "u_Texture");
         mTextureCoordinateHandle = GLES20.glGetAttribLocation(programHandle, "a_TexCoordinate");
-
-
-
-
     }
     @Override
     public void draw() {
-
+        super.draw();
         GLES20.glVertexAttribPointer(mPositionHandle, 3, GLES20.GL_FLOAT, false,
                 0, vertexBuffer);
         GLES20.glEnableVertexAttribArray(mPositionHandle);
@@ -77,7 +86,6 @@ public abstract class TexturedModel implements BaseModel {
         // Tell the texture uniform sampler to use this texture in the shader by binding to texture unit 0.
         GLES20.glUniform1i(mTextureUniformHandle, 0);
 
-        Matrix.setIdentityM(mModelMatrix, 0);
         Matrix.multiplyMM(mMVPMatrix, 0, Camera.getmViewMatrix(), 0, mModelMatrix, 0);
 
         Matrix.multiplyMM(mMVPMatrix, 0, Camera.getmProjectionMatrix(), 0, mMVPMatrix, 0);
@@ -87,5 +95,7 @@ public abstract class TexturedModel implements BaseModel {
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertexCount);
 
     }
-    abstract int getTextureId();
+    int getTextureResId(){
+        return textureResId;
+    }
 }
