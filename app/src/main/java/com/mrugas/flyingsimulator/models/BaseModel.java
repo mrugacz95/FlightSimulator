@@ -3,6 +3,8 @@ package com.mrugas.flyingsimulator.models;
 import android.opengl.Matrix;
 
 import com.mrugas.flyingsimulator.R;
+import com.mrugas.flyingsimulator.Utilities.Matrix4;
+import com.mrugas.flyingsimulator.Utilities.Quaternion;
 import com.mrugas.flyingsimulator.Utilities.Vector3;
 
 /**
@@ -10,21 +12,28 @@ import com.mrugas.flyingsimulator.Utilities.Vector3;
  */
 public abstract class BaseModel {
 
-    protected float[] mModelMatrix = new float[16];
+    protected Matrix4 mModelMatrix = new Matrix4();
 
     protected Vector3 position = new Vector3(0.f);
     protected Vector3 rotation = new Vector3(0.f);
+    protected Quaternion quaternionRotation = new Quaternion();
     protected Vector3 scale = new Vector3(1.f);
     BaseModel(){
-        Matrix.setIdentityM(mModelMatrix,0);
+       mModelMatrix.idt();
     }
+    public abstract void init();
     public void draw(){
-        Matrix.setIdentityM(mModelMatrix,0);
-        Matrix.translateM(mModelMatrix,0,position.x,position.y,position.z);
-        Matrix.scaleM(mModelMatrix,0,scale.x,scale.y,scale.z);
-        Matrix.rotateM(mModelMatrix,0,rotation.x,1.f,0.f,0.f);
-        Matrix.rotateM(mModelMatrix,0,rotation.y,0.f,1.f,0.f);
-        Matrix.rotateM(mModelMatrix,0,rotation.z,0.f,0.f,1.f);
+        mModelMatrix.idt();
+        mModelMatrix.scale(scale);
+        mModelMatrix.rotate(quaternionRotation);
+        mModelMatrix.translate(position);
+//        Matrix.translateM(mModelMatrix,0,position.x,position.y,position.z);
+//        Matrix.scaleM(mModelMatrix,0,scale.x,scale.y,scale.z);
+//        Matrix.multiplyMM(mModelMatrix,0,qut,0, mModelMatrix,0);
+//        Matrix.rotateM(mModelMatrix,0,rotation.x,1.f,0.f,0.f);
+//        Matrix.rotateM(mModelMatrix,0,rotation.y,0.f,1.f,0.f);
+//        Matrix.rotateM(mModelMatrix,0,rotation.z,0.f,0.f,1.f);
+        //Matrix.rotateM(mModelMatrix,0,f,vec.x,vec.y,vec.z);
         }
     int getMeshResourceId(){
         return R.raw.cube;
@@ -46,4 +55,8 @@ public abstract class BaseModel {
     }
     public Vector3 getRotation(){ return rotation; }
 
+    public void rotate(float x, float y, int z){
+        Quaternion q = Quaternion.Euler(x,y,z);
+        quaternionRotation.mul(q);
+    }
 }

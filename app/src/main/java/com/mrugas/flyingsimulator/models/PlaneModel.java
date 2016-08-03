@@ -7,6 +7,8 @@ import android.os.SystemClock;
 
 import com.mrugas.flyingsimulator.R;
 import com.mrugas.flyingsimulator.Utilities.Camera;
+import com.mrugas.flyingsimulator.Utilities.Matrix4;
+import com.mrugas.flyingsimulator.Utilities.Quaternion;
 import com.mrugas.flyingsimulator.Utilities.Vector3;
 
 /**
@@ -32,8 +34,16 @@ public class PlaneModel extends TexturedModel {
 
     @Override
     public int getMeshResourceId() {
-        return R.raw.plane;
+        return R.raw.cube;
     }
+
+    @Override
+    public void init() {
+        super.init();
+        //scale = new Vector3(4.f,4.f,4.f);
+        //translate(5f,4f,12f);
+    }
+
     @Override
     public void draw() {
         float time = SystemClock.uptimeMillis() / 1000.f;
@@ -47,11 +57,15 @@ public class PlaneModel extends TexturedModel {
 //        }
 
         //translate(deltaTime*speed*(float)Math.cos(rotation.x)*(float)Math.cos(rotation.y),deltaTime*speed*(float)Math.sin(rotation.y),deltaTime*speed*(float)Math.cos(rotation.z));
-        position.x = 5.f * (float)Math.sin(Math.toRadians(50*time));
-        position.z = 5.f * (float)Math.cos(Math.toRadians(50*time));
-        rotation.y = time*50f+90;
+        //position.x = 5.f * (float)Math.sin(Math.toRadians(50*time));
+        //position.z = 5.f * (float)Math.cos(Math.toRadians(50*time));
+        //rotation.y = time*50f+90;
+        //rotation.x = -20;
+        this.rotate(2,0,0);
         //translate(time*Math.sin(Math.toDegrees(rotation.x)*Math.sin(Math.toDegrees(rotation.y)),0f,0f);
-        scale = new Vector3(2.f,2.f,2.f);
+//        rotation.x = quaternionRotation.getPitch();
+//        rotation.y = quaternionRotation.getYaw();
+//        rotation.z = quaternionRotation.getRoll();
         super.draw();
     }
 
@@ -59,7 +73,7 @@ public class PlaneModel extends TexturedModel {
     public void setPlaneRotation(float rotation) {
         this.currentRotation = rotation;
     }
-    public float[] getModelViewMatrix(){
+    public Matrix4 getModelViewMatrix(){
         return mModelMatrix;
     }
 }

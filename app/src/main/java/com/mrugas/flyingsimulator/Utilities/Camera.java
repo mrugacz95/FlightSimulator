@@ -11,8 +11,8 @@ import com.mrugas.flyingsimulator.scenes.SceneManager;
 public class Camera {
 
     static final float eyeX = 0.0f;
-    static final float eyeY = 0.0f;
-    static final float eyeZ = -2.5f;
+    static final float eyeY = 3.0f;
+    static final float eyeZ = -9f;
 
     static final float lookX = 0.0f;
     static final float lookY = 0.0f;
@@ -23,14 +23,14 @@ public class Camera {
     static final float upZ = 0.0f;
 
     public static float[] getmViewMatrix() {
-//        float[] view = ((PlaneModel)SceneManager.getInstance().getCurrentScene().getModel("plane")).getModelViewMatrix();
+//        float[] view = ((PlaneModel)SceneManager.getInstance().getCurrentScene().getModel("plane.obj")).getModelViewMatrix();
 //
 //        Matrix.invertM(view,0,view,0);
 //        Matrix.translateM(view,0,0.f,0.f,-3.f);
 //        return view;
-        Vector3 pos = ((PlaneModel)SceneManager.getInstance().getCurrentScene().getModel("plane")).getPosition();
-        Vector3 rot = ((PlaneModel)SceneManager.getInstance().getCurrentScene().getModel("plane")).getPosition();
-        Matrix.setLookAtM(mViewMatrix, 0,  pos.x-(float) Math.cos(Math.toRadians(rot.y))*5, pos.y+(float) Math.cos(Math.toRadians(rot.z))*5, pos.z-(float) Math.sin(Math.toRadians(rot.x))*5, pos.x, pos.y, pos.z, upX, upY, upZ);
+//        Vector3 pos = ((PlaneModel)SceneManager.getInstance().getCurrentScene().getModel("plane.obj")).getPosition();
+//        Vector3 rot = ((PlaneModel)SceneManager.getInstance().getCurrentScene().getModel("plane.obj")).getPosition();
+//        Matrix.setLookAtM(mViewMatrix, 0,  pos.x-5, pos.y+5, pos.z, pos.x, pos.y, pos.z, upX, upY, upZ);
         return mViewMatrix;
     }
 
@@ -43,7 +43,7 @@ public class Camera {
     static private float[] mVPMatrix = new float[16];
 
     static public float[] getVPMatrix() {
-        float[] view = ((PlaneModel)SceneManager.getInstance().getCurrentScene().getModel("plane")).getModelViewMatrix();
+        float[] view = ((PlaneModel)SceneManager.getInstance().getCurrentScene().getModel("plane")).getModelViewMatrix().getValues();
         Matrix.translateM(view,0,0.f,0.f,-3.f);
         return view;
     }
@@ -60,11 +60,11 @@ public class Camera {
         Matrix.frustumM( mProjectionMatrix, 0, left, right, bottom, top, near, far);
 
 
+        Matrix.setLookAtM(mViewMatrix, 0,  eyeX, eyeY, eyeZ, lookX, lookY, lookZ, upX, upY, upZ);
 
 
 
-
-        Matrix.multiplyMM(mVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
+        //Matrix.multiplyMM(mVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
     }
 
     public static void rotate(int degree, float x, float y, float z) {

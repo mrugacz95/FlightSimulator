@@ -77,7 +77,7 @@ public final class Affine2 implements Serializable {
      *      [  M10  M11  M13  ]
      *      [   0    0    1   ]
      * </pre>
-     * @param matrix The source matrix, assumed to be an affine transformation within XY plane. This matrix will not be modified.
+     * @param matrix The source matrix, assumed to be an affine transformation within XY plane.obj. This matrix will not be modified.
      * @return This matrix for the purpose of chaining operations. */
     public Affine2 set (Matrix4 matrix) {
         float[] other = matrix.val;

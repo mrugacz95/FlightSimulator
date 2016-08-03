@@ -53,8 +53,7 @@ public abstract class Model extends BaseModel {
 //        GLES20.glVertexAttribPointer(mColorHandle, 4, GLES20.GL_FLOAT, false,
 //                0, colorBuffer);
 //        GLES20.glEnableVertexAttribArray(mColorHandle);
-
-        Matrix.multiplyMM(mMVPMatrix, 0, Camera.getmViewMatrix(), 0, mModelMatrix, 0);
+        Matrix.multiplyMM(mMVPMatrix, 0, Camera.getmViewMatrix(), 0,mModelMatrix.getValues(), 0);
 
         Matrix.multiplyMM(mMVPMatrix, 0, Camera.getmProjectionMatrix(), 0, mMVPMatrix, 0);
 

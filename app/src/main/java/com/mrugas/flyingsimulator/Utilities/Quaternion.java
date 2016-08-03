@@ -66,6 +66,11 @@ public class Quaternion implements Serializable {
         this.set(axis, angle);
     }
 
+    static public Quaternion Euler(float x, float y, float z){
+        Quaternion q = new Quaternion();
+        q.setEulerAngles(x,y,z);
+        return q;
+    }
     /** Sets the components of the quaternion
      * @param x The x-component
      * @param y The y-component

@@ -447,12 +447,12 @@ public class Matrix4 implements Serializable {
                 * val[M12] * val[M21] - val[M01] * val[M10] * val[M22] - val[M02] * val[M11] * val[M20];
     }
 
-    /** Sets the matrix to a projection matrix with a near- and far plane, a field of view in degrees and an aspect ratio. Note that
+    /** Sets the matrix to a projection matrix with a near- and far plane.obj, a field of view in degrees and an aspect ratio. Note that
      * the field of view specified is the angle in degrees for the height, the field of view for the width will be calculated
      * according to the aspect ratio.
      *
-     * @param near The near plane
-     * @param far The far plane
+     * @param near The near plane.obj
+     * @param far The far plane.obj
      * @param fovy The field of view of the height in degrees
      * @param aspectRatio The "width over height" aspect ratio
      * @return This matrix for the purpose of chaining methods together. */
@@ -481,16 +481,16 @@ public class Matrix4 implements Serializable {
         return this;
     }
 
-    /** Sets the matrix to a projection matrix with a near/far plane, and left, bottom, right and top specifying the points on the
-     * near plane that are mapped to the lower left and upper right corners of the viewport. This allows to create projection
+    /** Sets the matrix to a projection matrix with a near/far plane.obj, and left, bottom, right and top specifying the points on the
+     * near plane.obj that are mapped to the lower left and upper right corners of the viewport. This allows to create projection
      * matrix with off-center vanishing point.
      *
      * @param left
      * @param right
      * @param bottom
      * @param top
-     * @param near The near plane
-     * @param far The far plane
+     * @param near The near plane.obj
+     * @param far The far plane.obj
      * @return This matrix for the purpose of chaining methods together. */
     public Matrix4 setToProjection (float left, float right, float bottom, float top, float near, float far) {
         float x = 2.0f * near / (right - left);
@@ -519,8 +519,8 @@ public class Matrix4 implements Serializable {
         return this;
     }
 
-    /** Sets this matrix to an orthographic projection matrix with the origin at (x,y) extending by width and height. The near plane
-     * is set to 0, the far plane is set to 1.
+    /** Sets this matrix to an orthographic projection matrix with the origin at (x,y) extending by width and height. The near plane.obj
+     * is set to 0, the far plane.obj is set to 1.
      *
      * @param x The x-coordinate of the origin
      * @param y The y-coordinate of the origin
@@ -533,14 +533,14 @@ public class Matrix4 implements Serializable {
     }
 
     /** Sets this matrix to an orthographic projection matrix with the origin at (x,y) extending by width and height, having a near
-     * and far plane.
+     * and far plane.obj.
      *
      * @param x The x-coordinate of the origin
      * @param y The y-coordinate of the origin
      * @param width The width
      * @param height The height
-     * @param near The near plane
-     * @param far The far plane
+     * @param near The near plane.obj
+     * @param far The far plane.obj
      * @return This matrix for the purpose of chaining methods together. */
     public Matrix4 setToOrtho2D (float x, float y, float width, float height, float near, float far) {
         setToOrtho(x, x + width, y, y + height, near, far);
@@ -550,12 +550,12 @@ public class Matrix4 implements Serializable {
     /** Sets the matrix to an orthographic projection like glOrtho (http://www.opengl.org/sdk/docs/man/xhtml/glOrtho.xml) following
      * the OpenGL equivalent
      *
-     * @param left The left clipping plane
-     * @param right The right clipping plane
-     * @param bottom The bottom clipping plane
-     * @param top The top clipping plane
-     * @param near The near clipping plane
-     * @param far The far clipping plane
+     * @param left The left clipping plane.obj
+     * @param right The right clipping plane.obj
+     * @param bottom The bottom clipping plane.obj
+     * @param top The top clipping plane.obj
+     * @param near The near clipping plane.obj
+     * @param far The far clipping plane.obj
      * @return This matrix for the purpose of chaining methods together. */
     public Matrix4 setToOrtho (float left, float right, float bottom, float top, float near, float far) {
 
@@ -1283,7 +1283,7 @@ public class Matrix4 implements Serializable {
         ; /*
 		matrix4_mul(mata, matb);
 	*/
-        Matrix.multiplyMM(mata,0,mata,0,matb,0);
+        Matrix.multiplyMM(mata,0,matb,0,mata,0);
 
     }
 
@@ -1439,6 +1439,11 @@ public class Matrix4 implements Serializable {
         tmp[M33] = 1;
 
         mul(val, tmp);
+        return this;
+    }
+
+    public Matrix4 scale(Vector3 vec){
+        scale(vec.x,vec.y,vec.z);
         return this;
     }
 

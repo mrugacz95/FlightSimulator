@@ -43,7 +43,8 @@ public class TexturedModel extends BaseModel {
         this.textureResId = textureResId;
         init();
     }
-    private void init(){
+    @Override
+    public void init(){
         textureResId = getTextureResId();
         meshResId = getMeshResourceId();
         Texture texture = new Texture(context,textureResId);
@@ -66,7 +67,9 @@ public class TexturedModel extends BaseModel {
     }
     @Override
     public void draw() {
+
         super.draw();
+
         GLES20.glVertexAttribPointer(mPositionHandle, 3, GLES20.GL_FLOAT, false,
                 0, vertexBuffer);
         GLES20.glEnableVertexAttribArray(mPositionHandle);
@@ -86,7 +89,7 @@ public class TexturedModel extends BaseModel {
         // Tell the texture uniform sampler to use this texture in the shader by binding to texture unit 0.
         GLES20.glUniform1i(mTextureUniformHandle, 0);
 
-        Matrix.multiplyMM(mMVPMatrix, 0, Camera.getmViewMatrix(), 0, mModelMatrix, 0);
+        Matrix.multiplyMM(mMVPMatrix, 0, Camera.getmViewMatrix(), 0, mModelMatrix.getValues(), 0);
 
         Matrix.multiplyMM(mMVPMatrix, 0, Camera.getmProjectionMatrix(), 0, mMVPMatrix, 0);
 

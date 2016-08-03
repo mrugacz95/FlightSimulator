@@ -16,7 +16,6 @@ import android.content.Context;
 import android.util.Log;
 
 import com.mrugas.flyingsimulator.Utilities.Material;
-import com.mrugas.flyingsimulator.Utilities.TDModelPart;
 import com.mrugas.flyingsimulator.Utilities.Triangulator;
 
 
@@ -31,8 +30,6 @@ public class OBJParser {
     Vector<Float> v=new Vector<Float>();
     Vector<Float> vn=new Vector<Float>();
     Vector<Float> vt=new Vector<Float>();
-    Vector<TDModelPart> parts=new Vector<TDModelPart>();
-    Vector<Material> materials=null;
 
     private final static String TAG = "OBJParser";
     public OBJParser(Context ctx){
@@ -77,14 +74,6 @@ public class OBJParser {
         long endTime = Calendar.getInstance().getTimeInMillis();
         Log.d(TAG, "End time " + (endTime - startTime));
 
-//        if(vPointer != null){//if not this is not the start of the first group
-//            TDModelPart model=new TDModelPart(vPointer, vtPointer, vnPointer, m,vn);
-//            parts.add(model);
-//        }
-//        TDModel t=new TDModel(v,vn,vt,parts);
-//        t.buildVertexBuffer();
-//        Log.v("models",t.toString());
-//        return t;
     }
 
 

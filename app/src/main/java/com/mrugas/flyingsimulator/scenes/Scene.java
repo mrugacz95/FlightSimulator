@@ -42,13 +42,27 @@ public class Scene {
 
         GLES20.glUseProgram(ShaderManger.getInstance().getProgramHandle("simple_program"));
         BaseModel cube = new TexturedModel(ShaderManger.getInstance().getProgramHandle("simple_program"),context, R.raw.cube, R.drawable.uv_checker_large);
-        cube.translate(0,-12,0);
+        cube.translate(0,-15,0);
         cube.scale(20,20,20);
         models.put("cube", cube);
-        BaseModel plane = new PlaneModel(ShaderManger.getInstance().getProgramHandle("simple_program"), context);
-            plane.translate(0,-1,0);
 
+        BaseModel plane = new PlaneModel(ShaderManger.getInstance().getProgramHandle("simple_program"), context);
         models.put("plane", plane);
+
+        plane = new PlaneModel(ShaderManger.getInstance().getProgramHandle("simple_program"), context);
+        plane.translate(5,3,4);
+        models.put("plane1", plane);
+
+        plane = new PlaneModel(ShaderManger.getInstance().getProgramHandle("simple_program"), context);
+        plane.translate(7,3,4);
+        plane.scale(1.3f,1.3f,1.3f);
+        models.put("plane2", plane);
+
+        plane = new PlaneModel(ShaderManger.getInstance().getProgramHandle("simple_program"), context);
+        plane.rotate(90f,45f,50);
+        plane.translate(5,3,4);
+        plane.scale(2,2,2);
+        models.put("plane3", plane);
     }
 
     void draw(){
