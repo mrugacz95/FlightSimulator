@@ -1,5 +1,16 @@
 package com.mrugas.flyingsimulator.managers;
 
+import android.content.Context;
+import android.opengl.GLES20;
+import android.util.Log;
+
+import com.mrugas.flyingsimulator.R;
+import com.mrugas.flyingsimulator.ShaderHelper;
+
+import org.apache.commons.io.IOUtils;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 
 /**
@@ -9,10 +20,12 @@ public class ShaderManger {
 
     static private ShaderManger shaderManger = null;
     HashMap<String,Integer> programs = new HashMap<>();
-
+    HashMap<Integer,Integer> vertexShaders = new HashMap<>();
+    HashMap<Integer,Integer> fragmentShaders = new HashMap<>();
     static public ShaderManger getInstance(){
-        if(shaderManger==null)
-            shaderManger=new ShaderManger();
+        if(shaderManger==null) {
+            shaderManger = new ShaderManger();
+        }
         return shaderManger;
     }
 
@@ -20,8 +33,40 @@ public class ShaderManger {
         return programs.get(name);
     }
 
-    public void addProgram(String name, int programHandler){
-        programs.put(name,programHandler);
+    public void addProgram(Integer vertexShaderResId, Integer fragmentShaderRedId, String programName, Context context){
+        if(programs.get(programName)!=null)
+            Log.e("ShaderManager", "Already Added");
+            int vertHand = -1;
+            InputStream inputStream;
+            if(vertexShaders.get(vertexShaderResId)==null) {
+                String vertexShader;
+                inputStream = context.getResources().openRawResource(vertexShaderResId);
+                try {
+                    vertexShader = IOUtils.toString(inputStream, "UTF-8");
+                    vertHand = ShaderHelper.compileShader(GLES20.GL_VERTEX_SHADER, vertexShader);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            else
+                vertHand = vertexShaders.get(vertexShaderResId);
+            int fragHand = -1;
+            if(fragmentShaders.get(fragmentShaderRedId)==null) {
+                String fragmentShader;
+                inputStream = context.getResources().openRawResource(fragmentShaderRedId);
+                try {
+                    fragmentShader = IOUtils.toString(inputStream, "UTF-8");
+                    fragHand = ShaderHelper.compileShader(GLES20.GL_FRAGMENT_SHADER,fragmentShader);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            else
+                vertHand = vertexShaders.get(vertexShaderResId);
+
+            programs.put(programName,
+                    ShaderHelper.createAndLinkProgram(vertHand,fragHand,
+                            new String[] {"a_Position",  "a_Color", "a_Normal", "a_TexCoordinate", "u_Texture"}));
     }
 
 

@@ -116,6 +116,17 @@ public class Quaternion implements Serializable {
         return (float)Math.sqrt(x * x + y * y + z * z + w * w);
     }
 
+    public Quaternion inv(){
+        float tmp=x;
+        x = y;
+        y=-tmp;
+        tmp = z;
+        z=w;
+        w = -tmp;
+        return this;
+
+    }
+
     @Override
     public String toString () {
         return "[" + x + "|" + y + "|" + z + "|" + w + "]";

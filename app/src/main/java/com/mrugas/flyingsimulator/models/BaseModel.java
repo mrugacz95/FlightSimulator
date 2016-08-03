@@ -55,7 +55,7 @@ public abstract class BaseModel {
     }
     public Quaternion getRotation(){ return quaternionRotation; }
 
-    public void rotate(float x, float y, int z){
+    public void rotate(float x, float y, float z){
         Quaternion q = Quaternion.Euler(x,y,z);
         quaternionRotation.mul(q);
     }

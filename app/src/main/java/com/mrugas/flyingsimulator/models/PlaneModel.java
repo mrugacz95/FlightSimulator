@@ -47,8 +47,8 @@ public class PlaneModel extends TexturedModel {
         float time = SystemClock.uptimeMillis() / 1000.f;
         deltaTime = time - lastTime;
         lastTime=time;
-        this.rotate(1,0,0);
-        Vector3 vec =new Vector3(0,0,0.1f);
+        rotate(currentRotation,0,0);
+        Vector3 vec =new Vector3(0,0,0.03f);
         vec.mul(quaternionRotation);
         translate(vec);
         super.draw();

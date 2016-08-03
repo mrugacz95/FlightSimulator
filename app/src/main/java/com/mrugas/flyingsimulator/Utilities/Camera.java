@@ -22,20 +22,31 @@ public class Camera {
     static final float upY = 1.0f;
     static final float upZ = 0.0f;
 
-    public static float[] getmViewMatrix() {
-//        float[] view = ((PlaneModel)SceneManager.getInstance().getCurrentScene().getModel("plane")).getModelViewMatrix().getValues();
-//
-//        Matrix.translateM(view,0,0.f,0.f,-3.f);
-//        return view;
-
+    public static void update(){
 
         PlaneModel plane = ((PlaneModel)SceneManager.getInstance().getCurrentScene().getModel("plane"));
-        Vector3 pos = plane.getPosition();
-        Vector3 dist = new Vector3(0,2,-3);
-        dist.mul(plane.getRotation());
-        dist.add(pos);
 
-        Matrix.setLookAtM(mViewMatrix, 0,  dist.x, dist.y, dist.z, pos.x, pos.y, pos.z, upX, upY, upZ);
+        Matrix4 mat = new  Matrix4();
+        Vector3 pos = new Vector3(plane.getPosition());
+        Quaternion rot = plane.getRotation();
+        mat.translate(-pos.x,-pos.y,-pos.z);
+        mat.rotate(plane.getRotation());
+        mat.translate(new Vector3(0,0,0).mul(plane.getRotation()));
+
+        Vector3 camPos = new Vector3(pos).add(new Vector3(0,2,-3).mul(rot));
+        Matrix.setIdentityM(mViewMatrix,0);
+        Vector3 up = new Vector3(0,1,0);
+        Quaternion qup = new Quaternion(rot);
+        qup.mul(Quaternion.Euler(90f,0,0));
+        up.mul(rot);
+        Matrix.setLookAtM(mViewMatrix, 0,  camPos.x,camPos.y,camPos.z, pos.x, pos.y,pos.z, up.x, up.y, up.z);
+        //mViewMatrix = mat.getValues();
+    }
+
+    public static float[] getmViewMatrix() {
+
+//        PlaneModel plane = ((PlaneModel)SceneManager.getInstance().getCurrentScene().getModel("plane"));
+//        Vector3 pos = plane.getPosition();
         return mViewMatrix;
     }
 
@@ -60,7 +71,7 @@ public class Camera {
         final float bottom = -1.0f;
         final float top = 1.0f;
         final float near = 1.0f;
-        final float far = 20.0f;
+        final float far = 40.0f;
 
         Matrix.frustumM( mProjectionMatrix, 0, left, right, bottom, top, near, far);
 

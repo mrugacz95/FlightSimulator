@@ -58,37 +58,13 @@ public class GLES20Renderer implements GLSurfaceView.Renderer, View.OnTouchListe
 //        myModel.draw();
     }
 
-    float mPreviousX;
-    float mPreviousY;
     @Override
     public boolean onTouch(View view, MotionEvent e) {
-        float x = e.getX();
-        float y = e.getY();
 
-        switch (e.getAction()) {
-            case MotionEvent.ACTION_MOVE:
-
-                float dx = x - mPreviousX;
-                float dy = y - mPreviousY;
-
-                Scene scene = SceneManager.getInstance().getCurrentScene();
-                if(scene==null) return false;
-                BaseModel plane = scene.getModel("plane");
-                if(plane instanceof PlaneModel){
-                    if (x < width / 2)
-                        ((PlaneModel)plane).setPlaneRotation(-90.f);
-                    else
-                        ((PlaneModel)plane).setPlaneRotation(90.f);
-
-                }
+        Scene scene = SceneManager.getInstance().getCurrentScene();
+        if(scene==null) return false;
+        return scene.onTouch(e,width,height);
 
 
-
-
-        }
-
-        mPreviousX = x;
-        mPreviousY = y;
-        return true;
     }
 }

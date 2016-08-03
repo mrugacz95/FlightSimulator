@@ -360,7 +360,6 @@ public class Matrix4 implements Serializable {
         val[M33] = 1;
         return this;
     }
-
     /** Inverts the matrix. Stores the result in this matrix.
      *
      * @return This matrix for the purpose of chaining methods together.
