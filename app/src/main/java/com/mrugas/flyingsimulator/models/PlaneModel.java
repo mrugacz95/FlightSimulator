@@ -34,14 +34,12 @@ public class PlaneModel extends TexturedModel {
 
     @Override
     public int getMeshResourceId() {
-        return R.raw.cube;
+        return R.raw.plane;
     }
 
     @Override
     public void init() {
         super.init();
-        //scale = new Vector3(4.f,4.f,4.f);
-        //translate(5f,4f,12f);
     }
 
     @Override
@@ -49,23 +47,10 @@ public class PlaneModel extends TexturedModel {
         float time = SystemClock.uptimeMillis() / 1000.f;
         deltaTime = time - lastTime;
         lastTime=time;
-//        if(rotation.y!=currentRotation){
-//            if(rotation.y>currentRotation)
-//                rotation.y-=deltaTime*rotationSpeed;
-//            else
-//                rotation.y+=deltaTime*rotationSpeed;
-//        }
-
-        //translate(deltaTime*speed*(float)Math.cos(rotation.x)*(float)Math.cos(rotation.y),deltaTime*speed*(float)Math.sin(rotation.y),deltaTime*speed*(float)Math.cos(rotation.z));
-        //position.x = 5.f * (float)Math.sin(Math.toRadians(50*time));
-        //position.z = 5.f * (float)Math.cos(Math.toRadians(50*time));
-        //rotation.y = time*50f+90;
-        //rotation.x = -20;
-        this.rotate(2,0,0);
-        //translate(time*Math.sin(Math.toDegrees(rotation.x)*Math.sin(Math.toDegrees(rotation.y)),0f,0f);
-//        rotation.x = quaternionRotation.getPitch();
-//        rotation.y = quaternionRotation.getYaw();
-//        rotation.z = quaternionRotation.getRoll();
+        this.rotate(1,0,0);
+        Vector3 vec =new Vector3(0,0,0.1f);
+        vec.mul(quaternionRotation);
+        translate(vec);
         super.draw();
     }
 

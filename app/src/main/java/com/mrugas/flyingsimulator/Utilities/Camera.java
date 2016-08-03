@@ -23,14 +23,19 @@ public class Camera {
     static final float upZ = 0.0f;
 
     public static float[] getmViewMatrix() {
-//        float[] view = ((PlaneModel)SceneManager.getInstance().getCurrentScene().getModel("plane.obj")).getModelViewMatrix();
+//        float[] view = ((PlaneModel)SceneManager.getInstance().getCurrentScene().getModel("plane")).getModelViewMatrix().getValues();
 //
-//        Matrix.invertM(view,0,view,0);
 //        Matrix.translateM(view,0,0.f,0.f,-3.f);
 //        return view;
-//        Vector3 pos = ((PlaneModel)SceneManager.getInstance().getCurrentScene().getModel("plane.obj")).getPosition();
-//        Vector3 rot = ((PlaneModel)SceneManager.getInstance().getCurrentScene().getModel("plane.obj")).getPosition();
-//        Matrix.setLookAtM(mViewMatrix, 0,  pos.x-5, pos.y+5, pos.z, pos.x, pos.y, pos.z, upX, upY, upZ);
+
+
+        PlaneModel plane = ((PlaneModel)SceneManager.getInstance().getCurrentScene().getModel("plane"));
+        Vector3 pos = plane.getPosition();
+        Vector3 dist = new Vector3(0,2,-3);
+        dist.mul(plane.getRotation());
+        dist.add(pos);
+
+        Matrix.setLookAtM(mViewMatrix, 0,  dist.x, dist.y, dist.z, pos.x, pos.y, pos.z, upX, upY, upZ);
         return mViewMatrix;
     }
 

@@ -46,23 +46,10 @@ public class Scene {
         cube.scale(20,20,20);
         models.put("cube", cube);
 
-        BaseModel plane = new PlaneModel(ShaderManger.getInstance().getProgramHandle("simple_program"), context);
+
+        PlaneModel plane = new PlaneModel(ShaderManger.getInstance().getProgramHandle("simple_program"), context);
+        plane.translate(0,2,4);
         models.put("plane", plane);
-
-        plane = new PlaneModel(ShaderManger.getInstance().getProgramHandle("simple_program"), context);
-        plane.translate(5,3,4);
-        models.put("plane1", plane);
-
-        plane = new PlaneModel(ShaderManger.getInstance().getProgramHandle("simple_program"), context);
-        plane.translate(7,3,4);
-        plane.scale(1.3f,1.3f,1.3f);
-        models.put("plane2", plane);
-
-        plane = new PlaneModel(ShaderManger.getInstance().getProgramHandle("simple_program"), context);
-        plane.rotate(90f,45f,50);
-        plane.translate(5,3,4);
-        plane.scale(2,2,2);
-        models.put("plane3", plane);
     }
 
     void draw(){
