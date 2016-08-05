@@ -22,6 +22,7 @@ public class Skybox extends TexturedModel {
     private int mProjectionHandle;
     private int mViewHandle;
     private int mCubeMap;
+    private int mModelHandle;
 
     public Skybox(int programHandle, Context context) {
         super(programHandle, context, R.raw.half_skybox, null);
@@ -56,13 +57,20 @@ public class Skybox extends TexturedModel {
         mTextureCoordinateHandle = GLES20.glGetAttribLocation(programHandle, "a_TexCoords");
 
         mProjectionHandle = GLES20.glGetUniformLocation(programHandle, "projection");
+        mModelHandle = GLES20.glGetUniformLocation(programHandle, "model");
         mViewHandle = GLES20.glGetUniformLocation(programHandle, "view");
         mCubeMap = GLES20.glGetUniformLocation(programHandle, "skybox");
     }
 
     @Override
     public void draw() {
+
         //GLES20.glDepthMask(false);
+
+        mModelMatrix.idt();
+        mModelMatrix.scale(scale);
+        //mModelMatrix.rotate(quaternionRotation);
+        //mModelMatrix.translate(position);
 
         GLES20.glUseProgram(programHandle);
         //GLES20.glUseProgram(ShaderManger.getInstance().getProgramHandle("simple_program"));
@@ -89,8 +97,9 @@ public class Skybox extends TexturedModel {
 //
 //            Matrix.multiplyMM(mMVPMatrix, 0, Camera.getmProjectionMatrix(), 0, mMVPMatrix, 0);
         //Matrix3 view = new Matrix3(Camera.getmViewMatrix());
-        GLES20.glUniformMatrix4fv(mViewHandle, 1, false, Camera.getmViewMatrix(), 0);
+        GLES20.glUniformMatrix4fv(mViewHandle, 1, false, Camera.getmViewMatrixForSkybox(), 0);
         GLES20.glUniformMatrix4fv(mProjectionHandle, 1, false, Camera.getmProjectionMatrix(), 0);
+        GLES20.glUniformMatrix4fv(mModelHandle, 1, false, mMVPMatrix, 0);
 
             GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 36);
 

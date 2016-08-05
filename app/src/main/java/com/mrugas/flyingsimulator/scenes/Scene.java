@@ -27,7 +27,7 @@ public class Scene implements RotationGestureDetector.OnRotationGestureListener 
         ShaderManger.getInstance().addProgram(R.raw.skybox_vertex_shader,R.raw.skybox_fragment_shader,"skybox_program",context);
 
         BaseModel skybox = new Skybox(ShaderManger.getInstance().getProgramHandle("skybox_program"),context);
-        skybox.scale(50,50,50);
+        skybox.scale(30,30,30);
         models.put("skybox", skybox);
 
         BaseModel cube = new TexturedModel(ShaderManger.getInstance().getProgramHandle("simple_program"), context, R.raw.cube, R.drawable.uv_checker_large);

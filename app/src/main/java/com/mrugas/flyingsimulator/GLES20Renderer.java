@@ -30,7 +30,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer, View.OnTouchListe
     @Override
     public void onSurfaceCreated(GL10 glUnused, EGLConfig config) {
         // Set the background clear color to gray.
-        GLES20.glClearColor(0.5f, 0.5f, 0.5f, 0.5f);
+        GLES20.glClearColor(0.2f, 0.55f, 0.5f, 0.9f);
         GLES20.glEnable(GLES20.GL_DEPTH_TEST);
         GLES20.glEnable(GLES20.GL_TEXTURE_2D);
 // Position the eye behind the origin.

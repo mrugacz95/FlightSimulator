@@ -54,6 +54,14 @@ public class Camera {
 //        Vector3 pos = plane.getPosition();
         return mViewMatrix;
     }
+    public static float[] getmViewMatrixForSkybox() {
+
+
+        Matrix4 mat = new  Matrix4();
+        PlaneModel plane = ((PlaneModel)SceneManager.getInstance().getCurrentScene().getModel("plane"));
+        mat.rotate(plane.getRotation());
+        return mat.getValues();
+    }
 
     public static float[] getmProjectionMatrix() {
         return mProjectionMatrix;
