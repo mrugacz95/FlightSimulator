@@ -22,6 +22,11 @@ public class Camera {
     static final float upY = 1.0f;
     static final float upZ = 0.0f;
 
+    static final float bottom = -1.0f;
+    static final float top = 1.0f;
+    static final float near = 1.0f;
+    static final float far = 250.0f;
+
     public static void update(){
 
         PlaneModel plane = ((PlaneModel)SceneManager.getInstance().getCurrentScene().getModel("plane"));
@@ -68,10 +73,6 @@ public class Camera {
         final float ratio = (float) width / height;
         final float left = -ratio;
         final float right = ratio;
-        final float bottom = -1.0f;
-        final float top = 1.0f;
-        final float near = 1.0f;
-        final float far = 40.0f;
 
         Matrix.frustumM( mProjectionMatrix, 0, left, right, bottom, top, near, far);
 

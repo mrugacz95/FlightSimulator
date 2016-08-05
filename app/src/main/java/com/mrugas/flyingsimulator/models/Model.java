@@ -25,11 +25,11 @@ public abstract class Model extends BaseModel {
             mGlobaColorHandle;
     private float[] mMVPMatrix = new float[16];
     private int vertexCount;
-    public Model(int programHandle, Context context){
+    public Model(int meshResId, int programHandle, Context context){
 
 
         OBJParser parser = new OBJParser(context);
-        parser.parseOBJ(getMeshResourceId());
+        parser.parseOBJ(meshResId);
         vertexCount = parser.getVertexCount();
         vertexBuffer = parser.getVertexBuffer();
 

@@ -28,7 +28,7 @@ public class PlaneModel extends TexturedModel {
     }
 
     @Override
-    int getTextureResId() {
+    Integer getTextureResId() {
         return R.drawable.candalal;
     }
 

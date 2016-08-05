@@ -29,9 +29,6 @@ public abstract class BaseModel {
         mModelMatrix.rotate(quaternionRotation);
         mModelMatrix.translate(position);
         }
-    int getMeshResourceId(){
-        return R.raw.cube;
-    };
 
     public void translate(float x, float y, float z){
         position.x+=x;

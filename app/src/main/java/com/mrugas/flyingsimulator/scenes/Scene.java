@@ -1,7 +1,6 @@
 package com.mrugas.flyingsimulator.scenes;
 
 import android.content.Context;
-import android.opengl.GLES20;
 import android.util.Log;
 import android.view.MotionEvent;
 
@@ -11,6 +10,7 @@ import com.mrugas.flyingsimulator.Utilities.RotationGestureDetector;
 import com.mrugas.flyingsimulator.managers.ShaderManger;
 import com.mrugas.flyingsimulator.models.BaseModel;
 import com.mrugas.flyingsimulator.models.PlaneModel;
+import com.mrugas.flyingsimulator.models.Skybox;
 import com.mrugas.flyingsimulator.models.TexturedModel;
 
 import java.util.HashMap;
@@ -24,9 +24,14 @@ public class Scene implements RotationGestureDetector.OnRotationGestureListener 
     public void init(Context context){
         rotationGestureDetector = new RotationGestureDetector(this);
         ShaderManger.getInstance().addProgram(R.raw.simple_vertex_shader,R.raw.texture_fragment_shader,"simple_program",context);
-        GLES20.glUseProgram(ShaderManger.getInstance().getProgramHandle("simple_program"));
-        BaseModel cube = new TexturedModel(ShaderManger.getInstance().getProgramHandle("simple_program"),context, R.raw.cube, R.drawable.uv_checker_large);
-        cube.translate(0,-21,0);
+        ShaderManger.getInstance().addProgram(R.raw.skybox_vertex_shader,R.raw.skybox_fragment_shader,"skybox_program",context);
+
+        BaseModel skybox = new Skybox(ShaderManger.getInstance().getProgramHandle("skybox_program"),context);
+        skybox.scale(50,50,50);
+        models.put("skybox", skybox);
+
+        BaseModel cube = new TexturedModel(ShaderManger.getInstance().getProgramHandle("simple_program"), context, R.raw.cube, R.drawable.uv_checker_large);
+        cube.translate(0,-75,0);
         cube.scale(50,50,50);
         models.put("cube", cube);
 

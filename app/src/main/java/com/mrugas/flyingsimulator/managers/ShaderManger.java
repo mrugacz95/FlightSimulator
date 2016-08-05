@@ -29,7 +29,7 @@ public class ShaderManger {
         return shaderManger;
     }
 
-    public int getProgramHandle(String name){
+    public Integer getProgramHandle(String name) {
         return programs.get(name);
     }
 

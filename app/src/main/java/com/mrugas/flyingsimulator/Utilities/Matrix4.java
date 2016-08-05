@@ -68,6 +68,17 @@ public class Matrix4 implements Serializable {
     public Matrix4 (Matrix4 matrix) {
         this.set(matrix);
     }
+    public Matrix4 (Matrix3 matrix) {
+        val[M00] = matrix.val[Matrix3.M00];
+        val[M01] = matrix.val[Matrix3.M01];
+        val[M02] = matrix.val[Matrix3.M02];
+        val[M10] = matrix.val[Matrix3.M10];
+        val[M11] = matrix.val[Matrix3.M11];
+        val[M12] = matrix.val[Matrix3.M12];
+        val[M20] = matrix.val[Matrix3.M20];
+        val[M21] = matrix.val[Matrix3.M21];
+        val[M22] = matrix.val[Matrix3.M22];
+    }
 
     /** Constructs a matrix from the given float array. The array must have at least 16 elements; the first 16 will be copied.
      * @param values The float array to copy. Remember that this matrix is in <a

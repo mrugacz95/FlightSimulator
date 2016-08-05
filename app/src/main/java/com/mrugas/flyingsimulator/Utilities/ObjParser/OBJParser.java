@@ -23,7 +23,7 @@ public class OBJParser {
     int numVertices=0;
     int numFaces=0;
     Context context;
-    int BYTES_PER_FLOAT = 4;
+    public static final int BYTES_PER_FLOAT = 4;
     Vector<Short> vPointer =new Vector<Short>();
     Vector<Short> vtPointer=new Vector<Short>();
     Vector<Short> vnPointer=new Vector<Short>();

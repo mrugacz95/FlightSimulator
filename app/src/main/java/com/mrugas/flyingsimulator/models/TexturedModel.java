@@ -26,10 +26,10 @@ public class TexturedModel extends BaseModel {
             mGlobaColorHandle,
             mTextureDataHandle,
             programHandle;
-    private Context context;
+    protected Context context;
     protected float[] mMVPMatrix = new float[16];
     protected int vertexCount;
-    int textureResId = R.drawable.uv_checker_large;
+    Integer textureResId = R.drawable.uv_checker_large;
     int meshResId = R.raw.cube;
     public TexturedModel(int programHandle, Context context){
         this.programHandle = programHandle;
@@ -37,7 +37,7 @@ public class TexturedModel extends BaseModel {
         init();
     }
 
-    public TexturedModel(int programHandle, Context context, int meshResId, int textureResId){
+    public TexturedModel(int programHandle, Context context, int meshResId, Integer textureResId){
         this(programHandle,context);
         this.meshResId=meshResId;
         this.textureResId = textureResId;
@@ -48,9 +48,8 @@ public class TexturedModel extends BaseModel {
         textureResId = getTextureResId();
         meshResId = getMeshResourceId();
         Texture texture = new Texture(context,textureResId);
-        TextureManager.getInstance().addTexture("plane_texture",texture);
+        TextureManager.getInstance().addTexture("texture"+textureResId,texture);
         mTextureDataHandle = texture.getTextureDataHandle();
-
 
         OBJParser parser = new OBJParser(context);
         parser.parseOBJ(getMeshResourceId());
@@ -69,13 +68,10 @@ public class TexturedModel extends BaseModel {
     public void draw() {
 
         super.draw();
-
+        GLES20.glUseProgram(programHandle);
         GLES20.glVertexAttribPointer(mPositionHandle, 3, GLES20.GL_FLOAT, false,
                 0, vertexBuffer);
         GLES20.glEnableVertexAttribArray(mPositionHandle);
-
-
-
 
         GLES20.glVertexAttribPointer(mTextureCoordinateHandle, 2, GLES20.GL_FLOAT, false,
                 0, uvBuffer);
@@ -98,7 +94,11 @@ public class TexturedModel extends BaseModel {
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertexCount);
 
     }
-    int getTextureResId(){
+    Integer getTextureResId(){
         return textureResId;
     }
+
+    int getMeshResourceId(){
+        return meshResId;
+    };
 }
