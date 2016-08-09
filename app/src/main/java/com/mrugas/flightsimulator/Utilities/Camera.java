@@ -26,7 +26,7 @@ public class Camera {
     static final float top = 1.0f;
     static final float near = 1.0f;
     static final float far = 250.0f;
-
+    static public boolean rotated = false;
     public static void update(){
 
         PlaneModel plane = ((PlaneModel)SceneManager.getInstance().getCurrentScene().getModel("plane"));
@@ -45,6 +45,8 @@ public class Camera {
         qup.mul(Quaternion.Euler(90f,0,0));
         up.mul(rot);
         Matrix.setLookAtM(mViewMatrix, 0,  camPos.x,camPos.y,camPos.z, pos.x, pos.y,pos.z, up.x, up.y, up.z);
+
+        if(rotated) Matrix.scaleM(mViewMatrix,0,mViewMatrix,0,1f,-1f,1f);
         //mViewMatrix = mat.getValues();
     }
 
@@ -61,6 +63,10 @@ public class Camera {
 //        PlaneModel plane = ((PlaneModel)SceneManager.getInstance().getCurrentScene().getModel("plane"));
 //        mat.rotate(new Quaternion(plane.getRotation()).inv());
         return new Matrix4(new Matrix3(new Matrix4(mViewMatrix))).getValues();
+    }
+    public static float[] getViewMatrixForWater(){
+        float[] toRet = new float[16];
+        return toRet;
     }
 
     public static float[] getmProjectionMatrix() {

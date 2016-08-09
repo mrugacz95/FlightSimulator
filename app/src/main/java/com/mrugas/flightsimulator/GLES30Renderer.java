@@ -50,7 +50,7 @@ public class GLES30Renderer implements GLSurfaceView.Renderer, View.OnTouchListe
     @Override
     public void onDrawFrame(GL10 glUnused) {
         GLES30.glClear(GLES30.GL_DEPTH_BUFFER_BIT | GLES30.GL_COLOR_BUFFER_BIT);
-        SceneManager.getInstance().draw();
+        SceneManager.getInstance().draw(width,height);
        // myModel.draw();
 
 //        myModel.draw();

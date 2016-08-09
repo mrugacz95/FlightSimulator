@@ -24,7 +24,7 @@ public class SceneManager {
         else
             return null;
     }
-    public void draw(){
-        scenes.peek().draw();
+    public void draw(int width, int height){
+        scenes.peek().draw(width, height);
     }
 }

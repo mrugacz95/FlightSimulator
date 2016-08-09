@@ -31,12 +31,6 @@ public class Skybox extends TexturedModel {
         textureResId = getTextureResId();
         meshResId = getMeshResourceId();
 
-
-//        OBJParser parser = new OBJParser(context);
-//        parser.parseOBJ(R.raw.skybox);
-//        vertexCount = parser.getVertexCount();
-//        vertexBuffer = parser.getVertexBuffer();
-//        uvBuffer = parser.getUVBuffer();
         vertexBuffer = ByteBuffer.allocateDirect(SkyboxCube.skyboxVertices.length * OBJParser.BYTES_PER_FLOAT * 3).order(ByteOrder.nativeOrder()).asFloatBuffer();
         vertexBuffer.put(SkyboxCube.skyboxVertices);
         vertexBuffer.position(0);

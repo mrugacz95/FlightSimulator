@@ -1,15 +1,18 @@
 package com.mrugas.flightsimulator.scenes;
 
 import android.content.Context;
+import android.opengl.GLES30;
 import android.util.Log;
 import android.view.MotionEvent;
 
 import com.mrugas.flightsimulator.R;
+import com.mrugas.flightsimulator.TextureHelper;
 import com.mrugas.flightsimulator.Utilities.Camera;
 import com.mrugas.flightsimulator.Utilities.RotationGestureDetector;
 import com.mrugas.flightsimulator.managers.ShaderManger;
 import com.mrugas.flightsimulator.models.BaseModel;
 import com.mrugas.flightsimulator.models.PlaneModel;
+import com.mrugas.flightsimulator.models.Quad;
 import com.mrugas.flightsimulator.models.Skybox;
 import com.mrugas.flightsimulator.models.TexturedModel;
 
@@ -25,14 +28,12 @@ public class Scene implements RotationGestureDetector.OnRotationGestureListener 
         rotationGestureDetector = new RotationGestureDetector(this);
         ShaderManger.getInstance().addProgram(R.raw.simple_vertex_shader,R.raw.texture_fragment_shader,"simple_program",context);
         ShaderManger.getInstance().addProgram(R.raw.skybox_vertex_shader,R.raw.skybox_fragment_shader,"skybox_program",context);
+        ShaderManger.getInstance().addProgram(R.raw.water_vartex_shader,R.raw.water_fragment_shader,"water_program",context);
 
         BaseModel cube = new TexturedModel(ShaderManger.getInstance().getProgramHandle("simple_program"), context, R.raw.cube, R.drawable.uv_checker_large);
-        cube.translate(0,-1,0);
-        models.put("cube", cube);
-        BaseModel cube1 = new TexturedModel(ShaderManger.getInstance().getProgramHandle("simple_program"), context, R.raw.cube, R.drawable.uv_checker_large);
         cube.translate(0,-30,0);
         cube.scale(50,50,50);
-        models.put("cube1", cube1);
+        models.put("cube", cube);
 
         PlaneModel plane = new PlaneModel(ShaderManger.getInstance().getProgramHandle("simple_program"), context);
         plane.translate(0,2,4);
@@ -42,13 +43,28 @@ public class Scene implements RotationGestureDetector.OnRotationGestureListener 
         skybox.scale(30,30,30);
         models.put("skybox", skybox);
 
-    }
+        BaseModel quad = new Quad(ShaderManger.getInstance().getProgramHandle("skybox_program"),context);
+        models.put("quad", quad);
 
-    void draw(){
+        frameBuffer = TextureHelper.createFrameBuffer(400, 400);
+
+    }
+    int frameBuffer = 0;
+    void draw(int width, int height){
+        GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, 0);
+        GLES30.glClear(GLES30.GL_DEPTH_BUFFER_BIT | GLES30.GL_COLOR_BUFFER_BIT);
         Camera.update();
         for(BaseModel model : models.values()){
             model.draw();
         }
+        Camera.rotated=true;
+        GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, frameBuffer);
+        GLES30.glViewport(0,0,width,height);
+        Camera.update();
+        for(BaseModel model : models.values()){
+            model.draw();
+        }
+        Camera.rotated=false;
     }
     public BaseModel getModel(String name){
         return models.get(name);
