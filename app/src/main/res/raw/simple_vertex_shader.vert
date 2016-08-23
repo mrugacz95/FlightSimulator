@@ -1,11 +1,12 @@
+#version 300 es
 uniform mat4 u_MVPMatrix;       // A constant representing the combined model/view/projection matrix.
 
-attribute vec4 a_Position;      // Per-vertex position information we will pass in.
-attribute vec4 a_Color;      // Per-vertex color information we will pass in.
-attribute vec2 a_TexCoordinate; // Per-vertex texture coordinate information we will pass in.
+in vec4 a_Position;      // Per-vertex position information we will pass in.
+in vec4 a_Color;      // Per-vertex color information we will pass in.
+in vec2 a_TexCoordinate; // Per-vertex texture coordinate information we will pass in.
 
-varying vec2 v_TexCoordinate;
-varying vec4 v_Color;              // This will be passed into the fragment shader.
+out vec2 v_TexCoordinate;
+out vec4 v_Color;              // This will be passed into the fragment shader.
 
 void main()                    // The entry point for our vertex shader.
 {

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.pm.ConfigurationInfo;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -43,6 +44,7 @@ public class MainActivity extends Activity {
             mGLView.setOnTouchListener(new TouchListener(renderer));
         } else {
             Toast.makeText(this,"Buy new phone",Toast.LENGTH_LONG).show();
+            Log.d("GLES30", "Not here");
             this.finish();
         }
     }

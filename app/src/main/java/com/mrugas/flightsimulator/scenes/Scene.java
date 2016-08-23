@@ -26,16 +26,17 @@ public class Scene implements RotationGestureDetector.OnRotationGestureListener 
     RotationGestureDetector rotationGestureDetector;
     public void init(Context context){
         rotationGestureDetector = new RotationGestureDetector(this);
-        ShaderManger.getInstance().addProgram(R.raw.simple_vertex_shader,R.raw.texture_fragment_shader,"simple_program",context);
+        ShaderManger.getInstance().addProgram(R.raw.simple_vertex_shader,R.raw.texture_fragment_shader,"texture_program",context);
+        ShaderManger.getInstance().addProgram(R.raw.simple_vertex_shader,R.raw.simple_fragment_shader,"simple_program",context);
         ShaderManger.getInstance().addProgram(R.raw.skybox_vertex_shader,R.raw.skybox_fragment_shader,"skybox_program",context);
         ShaderManger.getInstance().addProgram(R.raw.water_vartex_shader,R.raw.water_fragment_shader,"water_program",context);
 
-        BaseModel cube = new TexturedModel(ShaderManger.getInstance().getProgramHandle("simple_program"), context, R.raw.cube, R.drawable.uv_checker_large);
+        BaseModel cube = new TexturedModel(ShaderManger.getInstance().getProgramHandle("texture_program"), context, R.raw.cube, R.drawable.uv_checker_large);
         cube.translate(0,-30,0);
         cube.scale(50,50,50);
         models.put("cube", cube);
 
-        PlaneModel plane = new PlaneModel(ShaderManger.getInstance().getProgramHandle("simple_program"), context);
+        PlaneModel plane = new PlaneModel(ShaderManger.getInstance().getProgramHandle("texture_program"), context);
         plane.translate(0,2,4);
         models.put("plane", plane);
 
@@ -43,8 +44,11 @@ public class Scene implements RotationGestureDetector.OnRotationGestureListener 
         skybox.scale(30,30,30);
         models.put("skybox", skybox);
 
-        BaseModel quad = new Quad(ShaderManger.getInstance().getProgramHandle("skybox_program"),context);
+        BaseModel quad = new Quad(ShaderManger.getInstance().getProgramHandle("water_program"),context);
         models.put("quad", quad);
+        quad.scale(160,160,160);
+        quad.rotate(0,90,0);
+        quad.translate(0,-15,0);
 
         frameBuffer = TextureHelper.createFrameBuffer(400, 400);
 
@@ -59,6 +63,7 @@ public class Scene implements RotationGestureDetector.OnRotationGestureListener 
         }
         Camera.rotated=true;
         GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, frameBuffer);
+        GLES30.glClear(GLES30.GL_DEPTH_BUFFER_BIT | GLES30.GL_COLOR_BUFFER_BIT);
         GLES30.glViewport(0,0,width,height);
         Camera.update();
         for(BaseModel model : models.values()){

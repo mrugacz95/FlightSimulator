@@ -41,7 +41,7 @@ public class ShaderHelper
 
 		if (shaderHandle == 0)
 		{			
-			throw new RuntimeException("Error creating shader.");
+			throw new RuntimeException("Error creating shader:" + shaderSource);
 		}
 		
 		return shaderHandle;

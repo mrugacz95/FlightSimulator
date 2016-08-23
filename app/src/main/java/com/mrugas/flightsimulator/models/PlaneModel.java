@@ -30,7 +30,7 @@ public class PlaneModel extends TexturedModel {
 
     @Override
     public int getMeshResourceId() {
-        return R.raw.plane;
+        return R.raw.cube;
     }
 
     @Override

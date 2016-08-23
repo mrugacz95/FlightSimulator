@@ -2,10 +2,14 @@
 
 in vec2 texCoord;
 
-out vec4 color;
+layout(location = 1) out vec4 color;
 
 uniform sampler2D renderedTexture;
-
+uniform float time;
 void main(){
-    color = texture( renderedTexture, texCoord );
+    int lod;
+    textureSize(renderedTexture, lod);
+    float time2 = time / 100.f;
+    vec2 texCoord2 = mod(texCoord*50.f,256.f) ;
+    color = texture( renderedTexture,  texCoord2) ;
 }
