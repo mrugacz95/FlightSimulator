@@ -5,6 +5,7 @@ import android.os.SystemClock;
 
 import com.mrugas.flightsimulator.R;
 import com.mrugas.flightsimulator.Utilities.Matrix4;
+import com.mrugas.flightsimulator.Utilities.Quaternion;
 import com.mrugas.flightsimulator.Utilities.Vector3;
 
 /**
@@ -30,7 +31,7 @@ public class PlaneModel extends TexturedModel {
 
     @Override
     public int getMeshResourceId() {
-        return R.raw.cube;
+        return R.raw.plane;
     }
 
     @Override
@@ -45,8 +46,13 @@ public class PlaneModel extends TexturedModel {
         lastTime=time;
         rotate(currentRotation,0,0);
         Vector3 vec =new Vector3(0,0,0.03f);
-        vec.mul(quaternionRotation);
+        vec.mul(rotation);
         translate(vec);
+        if(position.y<0) {
+            position.y = 0;
+            //rotation= Quaternion.Euler(rotation.getPitch(),0,rotation.getRoll());
+        }
+
         super.draw();
     }
 

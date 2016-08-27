@@ -31,6 +31,9 @@ public class GLES30Renderer implements GLSurfaceView.Renderer, View.OnTouchListe
         GLES30.glClearColor(0.2f, 0.55f, 0.5f, 0.9f);
         GLES30.glEnable(GLES30.GL_DEPTH_TEST);
         GLES30.glEnable(GLES30.GL_TEXTURE_2D);
+        GLES30.glEnable(GLES30.GL_BLEND);
+
+        GLES30.glBlendFunc (GLES30.GL_SRC_ALPHA, GLES30.GL_ONE_MINUS_SRC_ALPHA);
 // Position the eye behind the origin.
 
         Scene scene = new Scene();
@@ -51,9 +54,6 @@ public class GLES30Renderer implements GLSurfaceView.Renderer, View.OnTouchListe
     public void onDrawFrame(GL10 glUnused) {
         GLES30.glClear(GLES30.GL_DEPTH_BUFFER_BIT | GLES30.GL_COLOR_BUFFER_BIT);
         SceneManager.getInstance().draw(width,height);
-       // myModel.draw();
-
-//        myModel.draw();
     }
 
     @Override

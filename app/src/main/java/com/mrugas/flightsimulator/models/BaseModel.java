@@ -12,7 +12,7 @@ public abstract class BaseModel {
     protected Matrix4 mModelMatrix = new Matrix4();
 
     protected Vector3 position = new Vector3(0.f);
-    protected Quaternion quaternionRotation = new Quaternion();
+    protected Quaternion rotation = new Quaternion();
     protected Vector3 scale = new Vector3(1.f);
 
     BaseModel(){
@@ -23,7 +23,7 @@ public abstract class BaseModel {
     public void draw(){
         mModelMatrix.idt();
         mModelMatrix.scale(scale);
-        mModelMatrix.rotate(quaternionRotation);
+        mModelMatrix.rotate(rotation);
         mModelMatrix.translate(position);
         }
 
@@ -47,13 +47,13 @@ public abstract class BaseModel {
     public Vector3 getPosition() {
         return position;
     }
-    public Quaternion getRotation(){ return quaternionRotation; }
+    public Quaternion getRotation(){ return rotation; }
 
     public void rotate(float x, float y, float z){
         Quaternion q = Quaternion.Euler(x,y,z);
-        quaternionRotation.mul(q);
+        rotation.mul(q);
     }
     public void rotate(Quaternion q){
-        quaternionRotation.mul(q);
+        rotation.mul(q);
     }
 }

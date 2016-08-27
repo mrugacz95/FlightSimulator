@@ -35,12 +35,18 @@ public class Skybox extends TexturedModel {
         vertexBuffer.put(SkyboxCube.skyboxVertices);
         vertexBuffer.position(0);
         List<Integer> texturesFaces = new ArrayList<>(6);
-        texturesFaces.add(R.drawable.cloudtop_ft);
-        texturesFaces.add(R.drawable.cloudtop_bk);
-        texturesFaces.add(R.drawable.cloudtop_up);
-        texturesFaces.add(R.drawable.cloudtop_dn);
-        texturesFaces.add(R.drawable.cloudtop_rt);
-        texturesFaces.add(R.drawable.cloudtop_lf);
+//        texturesFaces.add(R.drawable.cloudtop_ft);
+//        texturesFaces.add(R.drawable.cloudtop_bk);
+//        texturesFaces.add(R.drawable.cloudtop_up);
+//        texturesFaces.add(R.drawable.cloudtop_dn);
+//        texturesFaces.add(R.drawable.cloudtop_rt);
+//        texturesFaces.add(R.drawable.cloudtop_lf);
+        texturesFaces.add(R.drawable.daylight_right);
+        texturesFaces.add(R.drawable.daylight_left);
+        texturesFaces.add(R.drawable.daylight_top);
+        texturesFaces.add(R.drawable.daylight_bottom);
+        texturesFaces.add(R.drawable.daylight_front);
+        texturesFaces.add(R.drawable.daylight_back);
 
         mTextureDataHandle = TextureHelper.loadCubeMap(context,texturesFaces);//TextureHelper.loadCubeMap(context,texturesFaces);
 

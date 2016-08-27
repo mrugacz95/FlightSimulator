@@ -111,7 +111,13 @@ public class Vector3 implements Serializable, Vector<Vector3> {
     public Vector3 set (final Vector2 vector, float z) {
         return this.set(vector.x, vector.y, z);
     }
-
+    public float[] getValues(){
+        float val[] = new float[3];
+        val[0]=x;
+        val[1]=y;
+        val[2]=z;
+        return val;
+    }
     /** Sets the components from the given spherical coordinate
      * @param azimuthalAngle The angle between x-axis in radians [0, 2pi]
      * @param polarAngle The angle between z-axis in radians [0, pi]

@@ -8,9 +8,10 @@ import android.os.SystemClock;
 import com.mrugas.flightsimulator.R;
 import com.mrugas.flightsimulator.Utilities.Camera;
 import com.mrugas.flightsimulator.Utilities.ObjParser.OBJParser;
+import com.mrugas.flightsimulator.Utilities.Quaternion;
+import com.mrugas.flightsimulator.Utilities.Vector3;
 import com.mrugas.flightsimulator.managers.Texture;
 import com.mrugas.flightsimulator.managers.TextureManager;
-import com.mrugas.flightsimulator.scenes.Scene;
 import com.mrugas.flightsimulator.scenes.SceneManager;
 
 import java.nio.ByteBuffer;
@@ -37,7 +38,9 @@ public class Quad extends TexturedModel {
             1.0f,  1.0f
     };
     private int mTimeUniformHandle;
-
+    int mWaterBumpHandle =0;
+    int mCameraDir = 0;
+    int mCameraPos = 0;
     public Quad(int programHandle, Context context) {
         super(programHandle, context);
     }
@@ -48,6 +51,9 @@ public class Quad extends TexturedModel {
         Texture texture = new Texture(context,textureResId);
         TextureManager.getInstance().addTexture("texture"+textureResId,texture);
         mTextureDataHandle = texture.getTextureDataHandle();
+        texture = new Texture(context,R.drawable.waterbump);
+        TextureManager.getInstance().addTexture("texture"+R.drawable.waterbump,texture);
+        mWaterBumpHandle = texture.getTextureDataHandle();
 
         vertexBuffer = ByteBuffer.allocateDirect(guad_vertex_buffer_data.length * OBJParser.BYTES_PER_FLOAT * 3).order(ByteOrder.nativeOrder()).asFloatBuffer();
         vertexBuffer.put(guad_vertex_buffer_data);
@@ -60,6 +66,8 @@ public class Quad extends TexturedModel {
         mTextureUniformHandle = GLES30.glGetUniformLocation(programHandle, "u_Texture");
         mTextureCoordinateHandle = GLES30.glGetAttribLocation(programHandle, "a_TexCoordinate");
         mTimeUniformHandle = GLES30.glGetUniformLocation(programHandle, "time");
+        mCameraDir = GLES30.glGetUniformLocation(programHandle, "cameraDir");
+        mCameraPos = GLES30.glGetUniformLocation(programHandle, "cameraPos");
     }
 
     @Override
@@ -71,7 +79,7 @@ public class Quad extends TexturedModel {
 
         mModelMatrix.idt();
         mModelMatrix.scale(scale);
-        mModelMatrix.rotate(quaternionRotation);
+        mModelMatrix.rotate(rotation);
         mModelMatrix.translate(position);
 
 //        PlaneModel plane = (PlaneModel)SceneManager.getInstance().getCurrentScene().getModel("plane");
@@ -87,13 +95,24 @@ public class Quad extends TexturedModel {
         // Bind the texture to this unit.
         GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, mTextureDataHandle);
 
+        GLES30.glActiveTexture(GLES30.GL_TEXTURE1);
+
+        // Bind the texture to this unit.
+        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, mWaterBumpHandle);
+
         Matrix.multiplyMM(mMVPMatrix, 0, Camera.getmViewMatrix(), 0, mModelMatrix.getValues(), 0);
 
         Matrix.multiplyMM(mMVPMatrix, 0, Camera.getmProjectionMatrix(), 0, mMVPMatrix, 0);
 
         GLES30.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0);
+        float time = (SystemClock.uptimeMillis()%1000/1000);
+        GLES30.glUniform1f(mTimeUniformHandle, time );
+        BaseModel plane = SceneManager.getInstance().getCurrentScene().getModel("plane");
+        Quaternion planeRotation = plane.getRotation();
+        GLES30.glUniform3fv(mCameraDir, 1,new Vector3(planeRotation.getPitch(),planeRotation.getYaw(),planeRotation.getRoll()).getValues(),0);
+        GLES30.glUniform3fv(mCameraPos, 1,plane.position.getValues(),0);
 
-        GLES30.glUniform1f(mTimeUniformHandle, SystemClock.uptimeMillis());
+
 
         GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, 18);
     }

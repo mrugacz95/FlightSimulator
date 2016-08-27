@@ -3,6 +3,7 @@ package com.mrugas.flightsimulator.scenes;
 import android.content.Context;
 import android.opengl.GLES30;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 
 import com.mrugas.flightsimulator.R;
@@ -21,7 +22,8 @@ import java.util.HashMap;
 /**
  * Created by mruga on 01.08.2016.
  */
-public class Scene implements RotationGestureDetector.OnRotationGestureListener {
+public class Scene implements RotationGestureDetector.OnRotationGestureListener,
+        GestureDetector.OnDoubleTapListener {
     HashMap<String,BaseModel> models = new HashMap<>();
     RotationGestureDetector rotationGestureDetector;
     public void init(Context context){
@@ -31,13 +33,13 @@ public class Scene implements RotationGestureDetector.OnRotationGestureListener 
         ShaderManger.getInstance().addProgram(R.raw.skybox_vertex_shader,R.raw.skybox_fragment_shader,"skybox_program",context);
         ShaderManger.getInstance().addProgram(R.raw.water_vartex_shader,R.raw.water_fragment_shader,"water_program",context);
 
-        BaseModel cube = new TexturedModel(ShaderManger.getInstance().getProgramHandle("texture_program"), context, R.raw.cube, R.drawable.uv_checker_large);
-        cube.translate(0,-30,0);
-        cube.scale(50,50,50);
-        models.put("cube", cube);
+//        BaseModel cube = new TexturedModel(ShaderManger.getInstance().getProgramHandle("texture_program"), context, R.raw.cube, R.drawable.uv_checker_large);
+//        cube.translate(0,-25,0);
+//        cube.scale(50,50,50);
+//        models.put("cube", cube);
 
         PlaneModel plane = new PlaneModel(ShaderManger.getInstance().getProgramHandle("texture_program"), context);
-        plane.translate(0,2,4);
+        plane.translate(0,5,4);
         models.put("plane", plane);
 
         BaseModel skybox = new Skybox(ShaderManger.getInstance().getProgramHandle("skybox_program"),context);
@@ -48,7 +50,7 @@ public class Scene implements RotationGestureDetector.OnRotationGestureListener 
         models.put("quad", quad);
         quad.scale(160,160,160);
         quad.rotate(0,90,0);
-        quad.translate(0,-15,0);
+        quad.translate(0,-5,0);
 
         frameBuffer = TextureHelper.createFrameBuffer(400, 400);
 
@@ -126,5 +128,20 @@ public class Scene implements RotationGestureDetector.OnRotationGestureListener 
 
         PlaneModel plane = (PlaneModel) getModel("plane");
         plane.rotate(0,0,(float) Math.toRadians(-rotationDetector.getAngle()));
+    }
+
+    @Override
+    public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public boolean onDoubleTap(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public boolean onDoubleTapEvent(MotionEvent motionEvent) {
+        return false;
     }
 }
