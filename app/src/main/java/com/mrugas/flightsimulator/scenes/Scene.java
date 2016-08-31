@@ -1,7 +1,9 @@
 package com.mrugas.flightsimulator.scenes;
 
+import android.app.Activity;
 import android.content.Context;
 import android.opengl.GLES30;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -12,8 +14,9 @@ import com.mrugas.flightsimulator.Utilities.Camera;
 import com.mrugas.flightsimulator.Utilities.RotationGestureDetector;
 import com.mrugas.flightsimulator.managers.ShaderManger;
 import com.mrugas.flightsimulator.models.BaseModel;
+import com.mrugas.flightsimulator.models.Flare;
 import com.mrugas.flightsimulator.models.PlaneModel;
-import com.mrugas.flightsimulator.models.Quad;
+import com.mrugas.flightsimulator.models.Water;
 import com.mrugas.flightsimulator.models.Skybox;
 import com.mrugas.flightsimulator.models.TexturedModel;
 
@@ -22,12 +25,17 @@ import java.util.HashMap;
 /**
  * Created by mruga on 01.08.2016.
  */
-public class Scene implements RotationGestureDetector.OnRotationGestureListener,
-        GestureDetector.OnDoubleTapListener {
+public class Scene implements RotationGestureDetector.OnRotationGestureListener {
     HashMap<String,BaseModel> models = new HashMap<>();
     RotationGestureDetector rotationGestureDetector;
-    public void init(Context context){
+    public void init(final Context context){
         rotationGestureDetector = new RotationGestureDetector(this);
+        ((Activity)context).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                gestureDetector = new GestureDetector(context,new GestureListener());
+            }
+        });
         ShaderManger.getInstance().addProgram(R.raw.simple_vertex_shader,R.raw.texture_fragment_shader,"texture_program",context);
         ShaderManger.getInstance().addProgram(R.raw.simple_vertex_shader,R.raw.simple_fragment_shader,"simple_program",context);
         ShaderManger.getInstance().addProgram(R.raw.skybox_vertex_shader,R.raw.skybox_fragment_shader,"skybox_program",context);
@@ -39,19 +47,29 @@ public class Scene implements RotationGestureDetector.OnRotationGestureListener,
 //        models.put("cube", cube);
 
         PlaneModel plane = new PlaneModel(ShaderManger.getInstance().getProgramHandle("texture_program"), context);
-        plane.translate(0,5,4);
+        plane.translate(-20,0,4);
         models.put("plane", plane);
 
         BaseModel skybox = new Skybox(ShaderManger.getInstance().getProgramHandle("skybox_program"),context);
         skybox.scale(30,30,30);
         models.put("skybox", skybox);
 
-        BaseModel quad = new Quad(ShaderManger.getInstance().getProgramHandle("water_program"),context);
+        BaseModel terrain = new TexturedModel(ShaderManger.getInstance().getProgramHandle("texture_program"), context, R.raw.terrain, R.drawable.terrain);
+        terrain.scale(10,10,10);
+        terrain.translate(0,0.5f,0);
+        models.put("terrain",terrain);
+
+        BaseModel quad = new Water(ShaderManger.getInstance().getProgramHandle("water_program"),context);
         models.put("quad", quad);
         quad.scale(160,160,160);
-        quad.rotate(0,90,0);
-        quad.translate(0,-5,0);
 
+        BaseModel sun = new TexturedModel(ShaderManger.getInstance().getProgramHandle("texture_program"), context, R.raw.sphere, R.drawable.sun);
+        models.put("sun", sun);
+        sun.translate(60,60,60);
+
+//        BaseModel flare = new TexturedModel(ShaderManger.getInstance().getProgramHandle("texture_program"),context, R.raw.cube, R.drawable.uv_checker_large);
+//        models.put("flare",flare);
+//        flare.translate(0,6,0);
         frameBuffer = TextureHelper.createFrameBuffer(400, 400);
 
     }
@@ -82,9 +100,12 @@ public class Scene implements RotationGestureDetector.OnRotationGestureListener,
 
     float SENSIVITY = 0.05f;
     Integer mainTouchId = null;
+    GestureDetector gestureDetector;
+    long tapTime = 0;
     public boolean onTouch(MotionEvent e, int width, int height) {
 
         rotationGestureDetector.onTouchEvent(e);
+        gestureDetector.onTouchEvent(e);
         if(e.getPointerCount()>2) return true;
 
         BaseModel plane = getModel("plane");
@@ -97,12 +118,18 @@ public class Scene implements RotationGestureDetector.OnRotationGestureListener,
         switch (e.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 mainTouchId = e.getPointerId(0);
+
+                tapTime = SystemClock.uptimeMillis();
                 break;
             case MotionEvent.ACTION_MOVE:
 
 
                 if(plane instanceof PlaneModel){
+                    float speed = ((PlaneModel) plane).getSpeed();
+                    if(speed>0.02)
                         plane.rotate(-dx*SENSIVITY,dy*SENSIVITY,0);
+
+                    tapTime = 0;
                 }
                 break;
             case MotionEvent.ACTION_UP:
@@ -112,14 +139,14 @@ public class Scene implements RotationGestureDetector.OnRotationGestureListener,
                         ((PlaneModel)plane).setPlaneRotation(0);
                 }
                 break;
-
-
-
         }
 
         mPreviousX = x;
         mPreviousY = y;
-        return true;
+        if(SystemClock.uptimeMillis()-tapTime>2500)
+            return false;
+        else
+            return true;
     }
 
     @Override
@@ -130,18 +157,29 @@ public class Scene implements RotationGestureDetector.OnRotationGestureListener,
         plane.rotate(0,0,(float) Math.toRadians(-rotationDetector.getAngle()));
     }
 
-    @Override
-    public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
-        return false;
+    public boolean onLongClick() {
+        PlaneModel plane = (PlaneModel) getModel("plane");
+        plane.slowDown();
+        return true;
     }
 
-    @Override
-    public boolean onDoubleTap(MotionEvent motionEvent) {
-        return false;
-    }
+    private class GestureListener extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
+            return false;
+        }
 
-    @Override
-    public boolean onDoubleTapEvent(MotionEvent motionEvent) {
-        return false;
+        @Override
+        public boolean onDoubleTap(MotionEvent motionEvent) {
+
+            PlaneModel plane = (PlaneModel) getModel("plane");
+            plane.speedUp();
+            return false;
+        }
+
+        @Override
+        public boolean onDoubleTapEvent(MotionEvent motionEvent) {
+            return false;
+        }
     }
 }

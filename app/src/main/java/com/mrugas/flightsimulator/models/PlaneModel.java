@@ -15,7 +15,8 @@ public class PlaneModel extends TexturedModel {
 
     private float currentRotation=0;
 
-    float speed = 0.5f;
+
+    float speed = 0.0f;
     float rotationSpeed = 20f;
     float lastTime;
     float deltaTime;
@@ -45,7 +46,7 @@ public class PlaneModel extends TexturedModel {
         deltaTime = time - lastTime;
         lastTime=time;
         rotate(currentRotation,0,0);
-        Vector3 vec =new Vector3(0,0,0.03f);
+        Vector3 vec =new Vector3(0,0,speed);
         vec.mul(rotation);
         translate(vec);
         if(position.y<0) {
@@ -62,5 +63,18 @@ public class PlaneModel extends TexturedModel {
     }
     public Matrix4 getModelViewMatrix(){
         return mModelMatrix;
+    }
+
+    public void speedUp() {
+        speed+=0.01;
+    }
+
+    public float getSpeed() {
+        return speed;
+    }
+
+    public void slowDown() {
+        speed-=0.01;
+        speed=Math.max(0,speed);
     }
 }

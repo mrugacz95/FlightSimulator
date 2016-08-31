@@ -29,7 +29,10 @@ public class ShaderManger {
     }
 
     public Integer getProgramHandle(String name) {
-        return programs.get(name);
+        if(programs.containsKey(name))
+            return programs.get(name);
+        else
+            throw new RuntimeException("No Prgram found:" + name);
     }
 
     public void addProgram(Integer vertexShaderResId, Integer fragmentShaderRedId, String programName, Context context){

@@ -65,4 +65,11 @@ public class GLES30Renderer implements GLSurfaceView.Renderer, View.OnTouchListe
 
 
     }
+
+    public boolean onLongClick() {
+
+        Scene scene = SceneManager.getInstance().getCurrentScene();
+        if(scene==null) return false;
+        return scene.onLongClick();
+    }
 }

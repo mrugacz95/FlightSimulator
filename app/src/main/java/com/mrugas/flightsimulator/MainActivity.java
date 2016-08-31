@@ -41,7 +41,9 @@ public class MainActivity extends Activity {
             mGLView.setPreserveEGLContextOnPause(true);
             GLES30Renderer renderer = new GLES30Renderer(this);
             mGLView.setRenderer(renderer);
-            mGLView.setOnTouchListener(new TouchListener(renderer));
+            TouchListener touchListener =new TouchListener(renderer);
+            mGLView.setOnTouchListener(touchListener);
+            mGLView.setOnLongClickListener(touchListener);
         } else {
             Toast.makeText(this,"Buy new phone",Toast.LENGTH_LONG).show();
             Log.d("GLES30", "Not here");

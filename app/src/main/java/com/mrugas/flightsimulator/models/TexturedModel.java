@@ -45,12 +45,7 @@ public class TexturedModel extends BaseModel {
     }
     @Override
     public void init(){
-        textureResId = getTextureResId();
-        meshResId = getMeshResourceId();
-        Texture texture = new Texture(context,textureResId);
-        TextureManager.getInstance().addTexture("texture"+textureResId,texture);
-        mTextureDataHandle = texture.getTextureDataHandle();
-
+        initTextureData();
         OBJParser parser = new OBJParser(context);
         parser.parseOBJ(getMeshResourceId());
         vertexCount = parser.getVertexCount();
@@ -63,6 +58,14 @@ public class TexturedModel extends BaseModel {
         mGlobaColorHandle = GLES30.glGetAttribLocation(programHandle, "glob_Color");
         mTextureUniformHandle = GLES30.glGetUniformLocation(programHandle, "u_Texture");
         mTextureCoordinateHandle = GLES30.glGetAttribLocation(programHandle, "a_TexCoordinate");
+    }
+    public void initTextureData(){
+        textureResId = getTextureResId();
+        meshResId = getMeshResourceId();
+        Texture texture = new Texture(context,textureResId);
+        TextureManager.getInstance().addTexture("texture"+textureResId,texture);
+        mTextureDataHandle = texture.getTextureDataHandle();
+        GLES30.glUniform1i(mTextureUniformHandle, 0);
     }
     @Override
     public void draw() {
@@ -83,7 +86,7 @@ public class TexturedModel extends BaseModel {
         GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, mTextureDataHandle);
 
         // Tell the texture uniform sampler to use this texture in the shader by binding to texture unit 0.
-        GLES30.glUniform1i(mTextureUniformHandle, 0);
+       // GLES30.glUniform1i(mTextureUniformHandle, 0);
 
         Matrix.multiplyMM(mMVPMatrix, 0, Camera.getmViewMatrix(), 0, mModelMatrix.getValues(), 0);
 
