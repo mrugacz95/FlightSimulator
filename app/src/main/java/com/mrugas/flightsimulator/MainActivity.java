@@ -10,14 +10,18 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class MainActivity extends Activity {
 
     @BindView(R.id.gl_surface)
     GLSurfaceView mGLView;
+    @BindView(R.id.loading)
+    LinearLayout ll_loading;
     View decorView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,13 +34,14 @@ public class MainActivity extends Activity {
         decorView = getWindow().getDecorView();
         decorView
                 .setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+        setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
         initialize();
-        setContentView(mGLView);
     }
     Context context;
     private void initialize() {
         if (hasGLES30()) {
-            mGLView = new GLSurfaceView(this);
+            //mGLView = new GLSurfaceView(this);
             mGLView.setEGLContextClientVersion(2);
             mGLView.setPreserveEGLContextOnPause(true);
             GLES30Renderer renderer = new GLES30Renderer(this);
@@ -82,5 +87,9 @@ public class MainActivity extends Activity {
         if (mGLView != null) {
             mGLView.onPause();
         }
+    }
+
+    public void hideLoading() {
+        ll_loading.setVisibility(View.GONE);
     }
 }

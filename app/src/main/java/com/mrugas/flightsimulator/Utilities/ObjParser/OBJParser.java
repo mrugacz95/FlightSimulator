@@ -9,6 +9,7 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
@@ -23,6 +24,7 @@ public class OBJParser {
     int numVertices=0;
     int numFaces=0;
     Context context;
+    static HashMap<Integer,OBJParser> models = new HashMap<>();
     public static final int BYTES_PER_FLOAT = 4;
     Vector<Short> vPointer =new Vector<Short>();
     Vector<Short> vtPointer=new Vector<Short>();
@@ -35,7 +37,12 @@ public class OBJParser {
     public OBJParser(Context ctx){
         context=ctx;
     }
-    public void parseOBJ(Integer resourceId) {
+    private Integer resId=null;
+    public OBJParser parseOBJ(Integer resourceId) {
+        if(models.containsKey(resourceId)) {
+            resId=resourceId;
+            return models.get(resourceId);
+        }
         BufferedReader reader=null;
         String line = null;
         Material m=null;
@@ -74,6 +81,8 @@ public class OBJParser {
         long endTime = Calendar.getInstance().getTimeInMillis();
         Log.d(TAG, "End time " + (endTime - startTime));
 
+        models.put(resourceId,this);
+        return this;
     }
 
 

@@ -25,7 +25,7 @@ public abstract class Model extends BaseModel {
 
 
         OBJParser parser = new OBJParser(context);
-        parser.parseOBJ(meshResId);
+        parser=parser.parseOBJ(meshResId);
         vertexCount = parser.getVertexCount();
         vertexBuffer = parser.getVertexBuffer();
 

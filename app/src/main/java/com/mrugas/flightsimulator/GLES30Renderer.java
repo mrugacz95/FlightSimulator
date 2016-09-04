@@ -1,5 +1,6 @@
 package com.mrugas.flightsimulator;
 
+import android.app.Activity;
 import android.content.Context;
 import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;
@@ -20,10 +21,10 @@ import javax.microedition.khronos.opengles.GL10;
  */
 public class GLES30Renderer implements GLSurfaceView.Renderer, View.OnTouchListener {
 
-    Context context;
+    Activity mActivity;
     int width, height;
-    public GLES30Renderer(Context context) {
-        this.context = context;
+    public GLES30Renderer(Activity activity) {
+        this.mActivity = activity;
     }
     @Override
     public void onSurfaceCreated(GL10 glUnused, EGLConfig config) {
@@ -37,7 +38,7 @@ public class GLES30Renderer implements GLSurfaceView.Renderer, View.OnTouchListe
 // Position the eye behind the origin.
 
         Scene scene = new Scene();
-        scene.init(context);
+        scene.init(mActivity);
         SceneManager.getInstance().addScene(scene);
     }
 

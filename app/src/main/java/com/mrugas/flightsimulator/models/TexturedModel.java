@@ -47,7 +47,7 @@ public class TexturedModel extends BaseModel {
     public void init(){
         initTextureData();
         OBJParser parser = new OBJParser(context);
-        parser.parseOBJ(getMeshResourceId());
+        parser=parser.parseOBJ(getMeshResourceId());
         vertexCount = parser.getVertexCount();
         vertexBuffer = parser.getVertexBuffer();
         uvBuffer = parser.getUVBuffer();
