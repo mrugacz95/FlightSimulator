@@ -39,7 +39,7 @@ public class PlaneModel extends TexturedModel {
     public void init() {
         super.init();
     }
-
+    public static final int WORLD_SIZE=350;
     @Override
     public void draw() {
         float time = SystemClock.uptimeMillis() / 1000.f;
@@ -53,6 +53,10 @@ public class PlaneModel extends TexturedModel {
             position.y = 0;
             //rotation= Quaternion.Euler(rotation.getPitch(),0,rotation.getRoll());
         }
+        if(position.x>WORLD_SIZE) position.x=-WORLD_SIZE;
+        if(position.x<-WORLD_SIZE) position.x=WORLD_SIZE;
+        if(position.z>WORLD_SIZE) position.z=-WORLD_SIZE;
+        if(position.z<-WORLD_SIZE) position.z=WORLD_SIZE;
 
         super.draw();
     }

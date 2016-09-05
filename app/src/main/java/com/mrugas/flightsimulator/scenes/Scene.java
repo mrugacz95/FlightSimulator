@@ -41,17 +41,17 @@ public class Scene implements RotationGestureDetector.OnRotationGestureListener 
         ShaderManger.getInstance().addProgram(R.raw.skybox_vertex_shader,R.raw.skybox_fragment_shader,"skybox_program",activity);
         ShaderManger.getInstance().addProgram(R.raw.water_vertex_shader,R.raw.water_fragment_shader,"water_program",activity);
 
-//        BaseModel cube = new TexturedModel(ShaderManger.getInstance().getProgramHandle("texture_program"), context, R.raw.cube, R.drawable.uv_checker_large);
+//        BaseModel cube = new TexturedModel(ShaderManger.getInstance().getProgramHandle("texture_program"), activity, R.raw.cube, R.drawable.uv_checker_large);
 //        cube.translate(0,-25,0);
 //        cube.scale(50,50,50);
 //        models.put("cube", cube);
 
         PlaneModel plane = new PlaneModel(ShaderManger.getInstance().getProgramHandle("texture_program"), activity);
-        plane.translate(-20,8,7);
+        plane.translate(-20,7.3f,7);
         models.put("plane", plane);
 
         BaseModel skybox = new Skybox(ShaderManger.getInstance().getProgramHandle("skybox_program"),activity);
-        skybox.scale(30,30,30);
+        //skybox.scale(30,30,30);
         models.put("skybox", skybox);
 
         BaseModel terrain = new TexturedModel(ShaderManger.getInstance().getProgramHandle("texture_program"), activity, R.raw.terrain, R.drawable.terrain);
@@ -61,17 +61,17 @@ public class Scene implements RotationGestureDetector.OnRotationGestureListener 
 
         BaseModel quad = new Water(ShaderManger.getInstance().getProgramHandle("water_program"),activity);
         models.put("quad", quad);
-        quad.scale(160,160,160);
+        quad.scale(600,1,600);
 
-        BaseModel sun = new TexturedModel(ShaderManger.getInstance().getProgramHandle("texture_program"), activity, R.raw.sphere, R.drawable.sun);
-        models.put("sun", sun);
-        sun.translate(60,60,60);
+//        BaseModel sun = new TexturedModel(ShaderManger.getInstance().getProgramHandle("texture_program"), activity, R.raw.sphere, R.drawable.sun);
+//        models.put("sun", sun);
+//        sun.translate(60,60,60);
 
 
         BaseModel landing = new TexturedModel(ShaderManger.getInstance().getProgramHandle("texture_program"), activity, R.raw.landing, R.drawable.landing);
         models.put("landing", landing);
         landing.scale(10,10,10);
-        landing.translate(-38,0.5f,30);
+        landing.translate(-38,-0.3f,30);
 
 //        BaseModel flare = new TexturedModel(ShaderManger.getInstance().getProgramHandle("texture_program"),context, R.raw.cube, R.drawable.uv_checker_large);
 //        models.put("flare",flare);

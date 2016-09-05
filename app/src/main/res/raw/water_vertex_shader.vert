@@ -15,6 +15,6 @@ void main()                    // The entry point for our vertex shader.
     texCoord = a_TexCoordinate;
     v_Color = a_Position;            // Pass the color through to the fragment shader.
 													// It will be interpolated across the triangle.
-    gl_Position = u_MVPMatrix  * vec4(a_Position.xyz,1);      // gl_Position is a special variable used to store the final position.
+    gl_Position = u_MVPMatrix  * a_Position;      // gl_Position is a special variable used to store the final position.
                                                  // Multiply the vertex by the matrix to get the final point in
 }                                // normalized screen coordinates.

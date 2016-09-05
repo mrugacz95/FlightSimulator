@@ -45,7 +45,6 @@ public class TexturedModel extends BaseModel {
     }
     @Override
     public void init(){
-        initTextureData();
         OBJParser parser = new OBJParser(context);
         parser=parser.parseOBJ(getMeshResourceId());
         vertexCount = parser.getVertexCount();
@@ -58,6 +57,7 @@ public class TexturedModel extends BaseModel {
         mGlobaColorHandle = GLES30.glGetAttribLocation(programHandle, "glob_Color");
         mTextureUniformHandle = GLES30.glGetUniformLocation(programHandle, "u_Texture");
         mTextureCoordinateHandle = GLES30.glGetAttribLocation(programHandle, "a_TexCoordinate");
+        initTextureData();
     }
     public void initTextureData(){
         textureResId = getTextureResId();
@@ -65,7 +65,7 @@ public class TexturedModel extends BaseModel {
         Texture texture = new Texture(context,textureResId);
         TextureManager.getInstance().addTexture("texture"+textureResId,texture);
         mTextureDataHandle = texture.getTextureDataHandle();
-        GLES30.glUniform1i(mTextureUniformHandle, 0);
+        //GLES30.glUniform1i(mTextureUniformHandle, 0);
     }
     @Override
     public void draw() {

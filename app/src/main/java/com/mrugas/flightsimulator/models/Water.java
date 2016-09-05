@@ -26,20 +26,17 @@ public class Water extends TexturedModel {
 
     private int mProjectionMatrixHandle;
     private int mViewMatrixHandle;
-    int mWaterBumpUnifromHandle=0;
+    int mWaterBumpUnifromHandle;
     public Water(int programHandle, Context context) {
         super(programHandle, context);
     }
     @Override
     public void init(){
         meshResId = getMeshResourceId();
-        initTextureData();
 
-        Texture texture = new Texture(context,R.drawable.waterbump);
-        TextureManager.getInstance().addTexture("texture"+R.drawable.waterbump,texture);
-        mWaterBumpDataHandle = texture.getTextureDataHandle();
-        GLES30.glUniform1i(mWaterBumpDataHandle, 1);
-        //mWaterBumpDataHandle = texture.getTextureDataHandle();
+        Texture waterBumpTexture = new Texture(context,R.drawable.waterbump);
+        TextureManager.getInstance().addTexture("texture"+R.drawable.waterbump,waterBumpTexture);
+        mWaterBumpDataHandle = waterBumpTexture.getTextureDataHandle();
 
         vertexBuffer = ByteBuffer.allocateDirect(Quad.guad_vertex_buffer_data.length * OBJParser.BYTES_PER_FLOAT * 3).order(ByteOrder.nativeOrder()).asFloatBuffer();
         vertexBuffer.put(Quad.guad_vertex_buffer_data);
@@ -50,20 +47,20 @@ public class Water extends TexturedModel {
         mPositionHandle = GLES30.glGetAttribLocation(programHandle, "a_Position");
         mMVPMatrixHandle = GLES30.glGetUniformLocation(programHandle, "u_MVPMatrix");
         mTextureUniformHandle = GLES30.glGetUniformLocation(programHandle, "texture");
-        GLES30.glUniform1i(mTextureUniformHandle, 0);
         mWaterBumpUnifromHandle = GLES30.glGetUniformLocation(programHandle, "waterBump");
-        GLES30.glUniform1i(mWaterBumpUnifromHandle, 1);
         mTextureCoordinateHandle = GLES30.glGetAttribLocation(programHandle, "a_TexCoordinate");
         mTimeUniformHandle = GLES30.glGetUniformLocation(programHandle, "time");
         mViewMatrixHandle = GLES30.glGetUniformLocation(programHandle, "u_ViewMatrix");
         mProjectionMatrixHandle = GLES30.glGetUniformLocation(programHandle, "u_ProjectionMatrix");
         //mCameraDir = GLES30.glGetUniformLocation(programHandle, "cameraDir");
         //mCameraPos = GLES30.glGetUniformLocation(programHandle, "cameraPos");
+        initTextureData();
+
     }
 
     @Override
     Integer getTextureResId() {
-        return R.drawable.uv_checker_large;
+        return R.drawable.waterbump;
     }
     @Override
     public void draw() {
@@ -86,10 +83,11 @@ public class Water extends TexturedModel {
 
         GLES30.glActiveTexture(GLES30.GL_TEXTURE0);
         GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, mTextureDataHandle);
+
+        GLES30.glUniform1i(mTextureUniformHandle, 0);
         GLES30.glActiveTexture(GLES30.GL_TEXTURE1);
         GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, mWaterBumpDataHandle);
-
-
+        GLES30.glUniform1i(mWaterBumpUnifromHandle, 1);
 //        GLES30.glActiveTexture(GLES30.GL_TEXTURE1);
 //        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, mTextureDataHandle);
 
@@ -101,7 +99,7 @@ public class Water extends TexturedModel {
         GLES30.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0);
         GLES30.glUniformMatrix4fv(mProjectionMatrixHandle, 1, false, Camera.getmProjectionMatrix(), 0);
         GLES30.glUniformMatrix4fv(mViewMatrixHandle, 1, false, Camera.getmViewMatrixForSkybox(), 0);
-        float time = (SystemClock.uptimeMillis()%1000/1000);
+        float time = (SystemClock.uptimeMillis()%10000);
         GLES30.glUniform1f(mTimeUniformHandle, time );
         //BaseModel plane = SceneManager.getInstance().getCurrentScene().getModel("plane");
         //Quaternion planeRotation = plane.getRotation();
