@@ -56,4 +56,9 @@ public class Quad extends TexturedModel {
         mTextureUniformHandle = GLES30.glGetUniformLocation(programHandle, "u_Texture");
         mTextureCoordinateHandle = GLES30.glGetAttribLocation(programHandle, "a_TexCoordinate");
     }
+
+    @Override
+    public boolean isCollidable() {
+        return false;
+    }
 }

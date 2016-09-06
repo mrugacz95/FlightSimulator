@@ -1,7 +1,6 @@
 package com.mrugas.flightsimulator.scenes;
 
 import android.app.Activity;
-import android.content.Context;
 import android.opengl.GLES30;
 import android.os.SystemClock;
 import android.util.Log;
@@ -13,6 +12,7 @@ import com.mrugas.flightsimulator.R;
 import com.mrugas.flightsimulator.TextureHelper;
 import com.mrugas.flightsimulator.Utilities.Camera;
 import com.mrugas.flightsimulator.Utilities.RotationGestureDetector;
+import com.mrugas.flightsimulator.Utilities.Vector3;
 import com.mrugas.flightsimulator.managers.ShaderManger;
 import com.mrugas.flightsimulator.models.BaseModel;
 import com.mrugas.flightsimulator.models.PlaneModel;
@@ -28,6 +28,7 @@ import java.util.HashMap;
 public class Scene implements RotationGestureDetector.OnRotationGestureListener {
     HashMap<String,BaseModel> models = new HashMap<>();
     RotationGestureDetector rotationGestureDetector;
+    Runnable logic;
     public void init(final Activity activity){
         rotationGestureDetector = new RotationGestureDetector(this);
         activity.runOnUiThread(new Runnable() {
@@ -47,7 +48,7 @@ public class Scene implements RotationGestureDetector.OnRotationGestureListener 
 //        models.put("cube", cube);
 
         PlaneModel plane = new PlaneModel(ShaderManger.getInstance().getProgramHandle("texture_program"), activity);
-        plane.translate(-20,7.3f,7);
+        plane.translate(-20,9f,7);
         models.put("plane", plane);
 
         BaseModel skybox = new Skybox(ShaderManger.getInstance().getProgramHandle("skybox_program"),activity);
@@ -73,6 +74,11 @@ public class Scene implements RotationGestureDetector.OnRotationGestureListener 
         landing.scale(10,10,10);
         landing.translate(-38,-0.3f,30);
 
+        BaseModel terrain2 = new TexturedModel(ShaderManger.getInstance().getProgramHandle("texture_program"), activity, R.raw.terrain2, R.drawable.landing);
+        models.put("terrain2", terrain2);
+        terrain2.scale(10,10,10);
+        terrain2.translate(-50,-0.3f,-60);
+
 //        BaseModel flare = new TexturedModel(ShaderManger.getInstance().getProgramHandle("texture_program"),context, R.raw.cube, R.drawable.uv_checker_large);
 //        models.put("flare",flare);
 //        flare.translate(0,6,0);
@@ -83,6 +89,8 @@ public class Scene implements RotationGestureDetector.OnRotationGestureListener 
                 ((MainActivity)activity).hideLoading();
             }
         });
+//        logic = new Logic();
+//        logic.run();
 
     }
     int frameBuffer = 0;
@@ -106,11 +114,21 @@ public class Scene implements RotationGestureDetector.OnRotationGestureListener 
     public BaseModel getModel(String name){
         return models.get(name);
     }
-
+    public boolean isColiding(Vector3 pos){
+        for(BaseModel model : models.values())
+            if(model instanceof TexturedModel && !(model instanceof PlaneModel))
+                if(model.isCollidable())
+                    if(((TexturedModel)model).getBounds().contains(pos))
+                        return true;
+        return false;
+    }
     float mPreviousX;
     float mPreviousY;
+    float mFirstX;
+    float mFirstY;
+    boolean isRotating = false;
 
-    float SENSIVITY = 0.05f;
+    float SENSITIVITY = 0.05f;
     Integer mainTouchId = null;
     GestureDetector gestureDetector;
     long tapTime = 0;
@@ -120,7 +138,7 @@ public class Scene implements RotationGestureDetector.OnRotationGestureListener 
         gestureDetector.onTouchEvent(e);
         if(e.getPointerCount()>2) return true;
 
-        BaseModel plane = getModel("plane");
+        PlaneModel plane = (PlaneModel) getModel("plane");
 
         float x = e.getX();
         float y = e.getY();
@@ -132,33 +150,32 @@ public class Scene implements RotationGestureDetector.OnRotationGestureListener 
                 mainTouchId = e.getPointerId(0);
 
                 tapTime = SystemClock.uptimeMillis();
+                isRotating=false;
+                mFirstX = x;
+                mFirstY = y;
                 break;
             case MotionEvent.ACTION_MOVE:
 
 
-                if(plane instanceof PlaneModel){
-                    float speed = ((PlaneModel) plane).getSpeed();
-                    if(speed>0.02)
-                        plane.rotate(-dx*SENSIVITY,dy*SENSIVITY,0);
+                    if(Math.abs(mFirstX-x) > 10 && Math.abs(mFirstY-y)>10){
+                        isRotating=true;
+                        plane.rotate(-dx * SENSITIVITY, dy * SENSITIVITY, 0);
+                    }
 
-                    tapTime = 0;
-                }
                 break;
             case MotionEvent.ACTION_UP:
                 mainTouchId = null;
-                if(plane instanceof PlaneModel){
                     if (x < width / 2)
                         ((PlaneModel)plane).setPlaneRotation(0);
-                }
+                long tapDuration = SystemClock.uptimeMillis()-tapTime;
+                if(tapDuration>500 && !isRotating)
+                    plane.slowDown();
                 break;
         }
 
         mPreviousX = x;
         mPreviousY = y;
-        if(SystemClock.uptimeMillis()-tapTime>2500)
-            return false;
-        else
-            return true;
+        return true;
     }
 
     @Override
@@ -170,8 +187,8 @@ public class Scene implements RotationGestureDetector.OnRotationGestureListener 
     }
 
     public boolean onLongClick() {
-        PlaneModel plane = (PlaneModel) getModel("plane");
-        plane.slowDown();
+        // plane = (PlaneModel) getModel("plane");
+        //plane.slowDown(); //too fast
         return true;
     }
 
@@ -192,6 +209,17 @@ public class Scene implements RotationGestureDetector.OnRotationGestureListener 
         @Override
         public boolean onDoubleTapEvent(MotionEvent motionEvent) {
             return false;
+        }
+    }
+    class Logic extends Thread{
+        public boolean running = true;
+        @Override
+        public void run() {
+            for (BaseModel model : models.values()){
+                while(running) {
+                    model.update();
+                }
+            }
         }
     }
 }

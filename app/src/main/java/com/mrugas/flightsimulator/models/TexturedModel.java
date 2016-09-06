@@ -5,8 +5,10 @@ import android.opengl.GLES30;
 import android.opengl.Matrix;
 
 import com.mrugas.flightsimulator.R;
+import com.mrugas.flightsimulator.Utilities.Bounds;
 import com.mrugas.flightsimulator.Utilities.Camera;
 import com.mrugas.flightsimulator.Utilities.ObjParser.OBJParser;
+import com.mrugas.flightsimulator.Utilities.Vector3;
 import com.mrugas.flightsimulator.managers.Texture;
 import com.mrugas.flightsimulator.managers.TextureManager;
 
@@ -26,6 +28,7 @@ public class TexturedModel extends BaseModel {
             mGlobaColorHandle,
             mTextureDataHandle,
             programHandle;
+    Bounds bounds;
     protected Context context;
     protected float[] mMVPMatrix = new float[16];
     protected int vertexCount;
@@ -47,10 +50,10 @@ public class TexturedModel extends BaseModel {
     public void init(){
         OBJParser parser = new OBJParser(context);
         parser=parser.parseOBJ(getMeshResourceId());
-        vertexCount = parser.getVertexCount();
         vertexBuffer = parser.getVertexBuffer();
+        vertexCount = parser.getVertexCount();
         uvBuffer = parser.getUVBuffer();
-
+        bounds = parser.getBounds();
         mPositionHandle = GLES30.glGetAttribLocation(programHandle, "a_Position");
         mMVPMatrixHandle = GLES30.glGetUniformLocation(programHandle, "u_MVPMatrix");
         mColorHandle = GLES30.glGetAttribLocation(programHandle, "a_Color");
@@ -65,7 +68,7 @@ public class TexturedModel extends BaseModel {
         Texture texture = new Texture(context,textureResId);
         TextureManager.getInstance().addTexture("texture"+textureResId,texture);
         mTextureDataHandle = texture.getTextureDataHandle();
-        //GLES30.glUniform1i(mTextureUniformHandle, 0);
+        GLES30.glUniform1i(mTextureUniformHandle, 0);
     }
     @Override
     public void draw() {
@@ -104,4 +107,26 @@ public class TexturedModel extends BaseModel {
     int getMeshResourceId(){
         return meshResId;
     };
+
+    public Bounds getBounds(){
+        return bounds;
+    }
+
+    @Override
+    public boolean isCollidable() {
+        return true;
+    }
+
+    @Override
+    public void translate(float x, float y, float z) {
+        super.translate(x, y, z);
+        bounds.setModelPosition(this);
+    }
+
+    @Override
+    public void scale(float x, float y, float z) {
+        super.scale(x, y, z);
+        if(bounds!=null)
+        bounds.setModelPosition(this);
+    }
 }

@@ -8,11 +8,12 @@ import com.mrugas.flightsimulator.Utilities.Vector3;
  * Created by mruga on 01.08.2016.
  */
 public abstract class BaseModel {
-
     protected Matrix4 mModelMatrix = new Matrix4();
 
     protected Vector3 position = new Vector3(0.f);
     protected Quaternion rotation = new Quaternion();
+
+
     protected Vector3 scale = new Vector3(1.f);
 
     BaseModel(){
@@ -20,6 +21,7 @@ public abstract class BaseModel {
     }
 
     public abstract void init();
+    public void update(){};
     public void draw(){
         mModelMatrix.idt();
         mModelMatrix.scale(scale);
@@ -55,5 +57,12 @@ public abstract class BaseModel {
     }
     public void rotate(Quaternion q){
         rotation.mul(q);
+    }
+
+    public Vector3 getScale() {
+        return scale;
+    }
+    public boolean isCollidable(){
+        return false;
     }
 }

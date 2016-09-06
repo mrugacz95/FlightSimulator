@@ -110,4 +110,9 @@ public class Water extends TexturedModel {
 
         GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, 6);
     }
+
+    @Override
+    public boolean isCollidable() {
+        return false;
+    }
 }

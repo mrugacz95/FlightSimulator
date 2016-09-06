@@ -2,6 +2,7 @@ package com.mrugas.flightsimulator.Utilities;
 
 import android.opengl.Matrix;
 
+import com.mrugas.flightsimulator.models.BaseModel;
 import com.mrugas.flightsimulator.models.PlaneModel;
 import com.mrugas.flightsimulator.scenes.SceneManager;
 
@@ -52,9 +53,8 @@ public class Camera {
 
     public static float[] getmViewMatrix() {
 
-//        PlaneModel plane = ((PlaneModel)SceneManager.getInstance().getCurrentScene().getModel("plane"));
-//        Vector3 pos = plane.getPosition();
         return mViewMatrix;
+
     }
     public static float[] getmViewMatrixForSkybox() {
 

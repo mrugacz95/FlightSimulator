@@ -100,4 +100,9 @@ public class Skybox extends TexturedModel {
 
         GLES30.glDepthMask(true);
     }
+
+    @Override
+    public boolean isCollidable() {
+        return false;
+    }
 }

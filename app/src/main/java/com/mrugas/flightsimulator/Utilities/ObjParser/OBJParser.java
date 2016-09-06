@@ -16,6 +16,7 @@ import java.util.Vector;
 import android.content.Context;
 import android.util.Log;
 
+import com.mrugas.flightsimulator.Utilities.Bounds;
 import com.mrugas.flightsimulator.Utilities.Material;
 import com.mrugas.flightsimulator.Utilities.Triangulator;
 
@@ -48,7 +49,7 @@ public class OBJParser {
         Material m=null;
 
         long startTime = Calendar.getInstance().getTimeInMillis();
-        Log.d(TAG, "Start parsing object " + resourceId.toString());
+        Log.d(TAG, "Start parsing object " + context.getResources().getResourceEntryName(resourceId));
         Log.d(TAG, "Start time " + startTime);
 
         InputStream inputStream = context.getResources().openRawResource(resourceId);
@@ -80,7 +81,7 @@ public class OBJParser {
 
         long endTime = Calendar.getInstance().getTimeInMillis();
         Log.d(TAG, "End time " + (endTime - startTime));
-
+        resId=resourceId;
         models.put(resourceId,this);
         return this;
     }
@@ -255,6 +256,28 @@ public class OBJParser {
 
     public int getVertexCount() {
         return vPointer.size();
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    public Bounds getBounds(){
+        Log.d("Bounds",context.getResources().getResourceEntryName(resId));
+        if(v.size()<=3) throw new RuntimeException("Object is not parsed:" + context.getResources().getResourceEntryName(resId));
+        Float front = v.get(2);
+        Float  back= v.get(2);
+        Float bottom=v.get(1);
+        Float top=v.get(1);
+        Float left=v.get(0);
+        Float right=v.get(0);
+
+        for(int i=0;i<v.size();i+=3){
+            right=Math.max(right,v.get(i));
+            left=Math.min(left,v.get(i));
+            top=Math.max(top,v.get(i+1));
+            bottom=Math.min(bottom,v.get(i+1));
+            back=Math.max(back,v.get(i+2));
+            front=Math.min(front,v.get(i+2));
+        }
+        return new Bounds(front,back,bottom,top,left,right);
     }
 }
 
