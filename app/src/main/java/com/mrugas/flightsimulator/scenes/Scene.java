@@ -148,7 +148,7 @@ public class Scene implements RotationGestureDetector.OnRotationGestureListener 
 
         rotationGestureDetector.onTouchEvent(e);
         gestureDetector.onTouchEvent(e);
-        if(e.getPointerCount()>2) return true;
+        if(e.getPointerCount()>2) return false;
 
         PlaneModel plane = (PlaneModel) getModel("plane");
 
@@ -159,7 +159,8 @@ public class Scene implements RotationGestureDetector.OnRotationGestureListener 
         float dy = y - mPreviousY;
         switch (e.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                mainTouchId = e.getPointerId(0);
+                if(mainTouchId==null)
+                    mainTouchId = e.getPointerId(0);
 
                 tapTime = SystemClock.uptimeMillis();
                 isRotating=false;
@@ -168,7 +169,7 @@ public class Scene implements RotationGestureDetector.OnRotationGestureListener 
                 break;
             case MotionEvent.ACTION_MOVE:
 
-
+                    if(e.getPointerId(0) == mainTouchId )
                     if(Math.abs(mFirstX-x) > 10 && Math.abs(mFirstY-y)>10){
                         isRotating=true;
                         plane.rotate(-dx * SENSITIVITY, dy * SENSITIVITY, 0);
