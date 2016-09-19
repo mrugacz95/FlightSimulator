@@ -28,7 +28,7 @@ public class TexturedModel extends BaseModel {
             mGlobaColorHandle,
             mTextureDataHandle,
             programHandle;
-    Bounds bounds;
+    private Bounds bounds;
     protected Context context;
     protected float[] mMVPMatrix = new float[16];
     protected int vertexCount;

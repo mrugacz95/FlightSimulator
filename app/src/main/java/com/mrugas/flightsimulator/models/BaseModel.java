@@ -11,12 +11,16 @@ public abstract class BaseModel {
     protected Matrix4 mModelMatrix = new Matrix4();
 
     protected Vector3 position = new Vector3(0.f);
+
+
+
     protected Quaternion rotation = new Quaternion();
+
 
 
     protected Vector3 scale = new Vector3(1.f);
 
-    BaseModel(){
+    public BaseModel(){
        mModelMatrix.idt();
     }
 
@@ -39,6 +43,9 @@ public abstract class BaseModel {
         position.y+=vec.y;
         position.z+=vec.z;
     }
+    public void setPosition(Vector3 position){
+        this.position=position;
+    }
 
     public void scale(float x, float y, float z){
         scale.x+=x;
@@ -46,6 +53,9 @@ public abstract class BaseModel {
         scale.z+=z;
     }
 
+    public void setScale(Vector3 scale) {
+        this.scale = scale;
+    }
     public Vector3 getPosition() {
         return position;
     }
@@ -64,5 +74,8 @@ public abstract class BaseModel {
     }
     public boolean isCollidable(){
         return false;
+    }
+    public void setRotation(Quaternion rotation) {
+        this.rotation = rotation;
     }
 }

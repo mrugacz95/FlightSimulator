@@ -6,7 +6,6 @@ import com.mrugas.flightsimulator.models.BaseModel;
  * Created by mruga on 06.09.2016.
  */
 public class Bounds {
-
     Float front;
     Float back;
     Float bottom;
@@ -30,9 +29,10 @@ public class Bounds {
     }
 
     public boolean contains(Vector3 point){
-        return  topWithPos >point.y &&
-                rightWithPos >point.x && leftWithPos <point.x &&
-                backWithPos >point.z && frontWithPos <point.z;
+        return topWithPos > point.y && rightWithPos > point.x && leftWithPos < point.x &&
+                backWithPos > point.z && frontWithPos < point.z;
+
+
     }
     public void setModelPosition(BaseModel model){
         topWithPos =top;
@@ -55,6 +55,9 @@ public class Bounds {
         backWithPos +=model.getPosition().z;
         leftWithPos +=model.getPosition().x;
         rightWithPos +=model.getPosition().x;
+    }
+    public Float getTopWithPos(){
+        return topWithPos;
     }
 
 }

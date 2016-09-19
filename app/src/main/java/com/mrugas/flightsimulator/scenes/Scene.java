@@ -10,12 +10,16 @@ import android.view.MotionEvent;
 import com.mrugas.flightsimulator.MainActivity;
 import com.mrugas.flightsimulator.R;
 import com.mrugas.flightsimulator.TextureHelper;
+import com.mrugas.flightsimulator.Utilities.Bounds;
 import com.mrugas.flightsimulator.Utilities.Camera;
+import com.mrugas.flightsimulator.Utilities.Collision;
 import com.mrugas.flightsimulator.Utilities.RotationGestureDetector;
 import com.mrugas.flightsimulator.Utilities.Vector3;
 import com.mrugas.flightsimulator.managers.ShaderManger;
 import com.mrugas.flightsimulator.models.BaseModel;
+import com.mrugas.flightsimulator.models.ParticleSystem.ParticleSystem;
 import com.mrugas.flightsimulator.models.PlaneModel;
+import com.mrugas.flightsimulator.models.Quad;
 import com.mrugas.flightsimulator.models.Water;
 import com.mrugas.flightsimulator.models.Skybox;
 import com.mrugas.flightsimulator.models.TexturedModel;
@@ -29,64 +33,72 @@ public class Scene implements RotationGestureDetector.OnRotationGestureListener 
     HashMap<String,BaseModel> models = new HashMap<>();
     RotationGestureDetector rotationGestureDetector;
     Runnable logic;
-    public void init(final Activity activity){
+    public void init(final Activity mActivity){
         rotationGestureDetector = new RotationGestureDetector(this);
-        activity.runOnUiThread(new Runnable() {
+        mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                gestureDetector = new GestureDetector(activity,new GestureListener());
+                gestureDetector = new GestureDetector(mActivity,new GestureListener());
             }
         });
-        ShaderManger.getInstance().addProgram(R.raw.simple_vertex_shader,R.raw.texture_fragment_shader,"texture_program",activity);
-        ShaderManger.getInstance().addProgram(R.raw.simple_vertex_shader,R.raw.simple_fragment_shader,"simple_program",activity);
-        ShaderManger.getInstance().addProgram(R.raw.skybox_vertex_shader,R.raw.skybox_fragment_shader,"skybox_program",activity);
-        ShaderManger.getInstance().addProgram(R.raw.water_vertex_shader,R.raw.water_fragment_shader,"water_program",activity);
+        ShaderManger.getInstance().addProgram(R.raw.simple_vertex_shader,R.raw.texture_fragment_shader,"texture_program",mActivity);
+        ShaderManger.getInstance().addProgram(R.raw.simple_vertex_shader,R.raw.simple_fragment_shader,"simple_program",mActivity);
+        ShaderManger.getInstance().addProgram(R.raw.skybox_vertex_shader,R.raw.skybox_fragment_shader,"skybox_program",mActivity);
+        ShaderManger.getInstance().addProgram(R.raw.water_vertex_shader,R.raw.water_fragment_shader,"water_program",mActivity);
 
 //        BaseModel cube = new TexturedModel(ShaderManger.getInstance().getProgramHandle("texture_program"), activity, R.raw.cube, R.drawable.uv_checker_large);
 //        cube.translate(0,-25,0);
 //        cube.scale(50,50,50);
 //        models.put("cube", cube);
 
-        PlaneModel plane = new PlaneModel(ShaderManger.getInstance().getProgramHandle("texture_program"), activity);
+        BaseModel quad = new Water(ShaderManger.getInstance().getProgramHandle("water_program"),mActivity);
+        models.put("quad", quad);
+        quad.scale(600,1,600);
+
+        PlaneModel plane = new PlaneModel(ShaderManger.getInstance().getProgramHandle("texture_program"), mActivity);
         plane.translate(-20,9f,7);
         models.put("plane", plane);
 
-        BaseModel skybox = new Skybox(ShaderManger.getInstance().getProgramHandle("skybox_program"),activity);
+        BaseModel skybox = new Skybox(ShaderManger.getInstance().getProgramHandle("skybox_program"),mActivity);
         //skybox.scale(30,30,30);
         models.put("skybox", skybox);
 
-        BaseModel terrain = new TexturedModel(ShaderManger.getInstance().getProgramHandle("texture_program"), activity, R.raw.terrain, R.drawable.terrain);
+        BaseModel terrain = new TexturedModel(ShaderManger.getInstance().getProgramHandle("texture_program"), mActivity, R.raw.terrain, R.drawable.terrain);
         terrain.scale(15,15,15);
         terrain.translate(70,0.5f,120);
         models.put("terrain",terrain);
 
-        BaseModel quad = new Water(ShaderManger.getInstance().getProgramHandle("water_program"),activity);
-        models.put("quad", quad);
-        quad.scale(600,1,600);
 
 //        BaseModel sun = new TexturedModel(ShaderManger.getInstance().getProgramHandle("texture_program"), activity, R.raw.sphere, R.drawable.sun);
 //        models.put("sun", sun);
 //        sun.translate(60,60,60);
 
+        //BaseModel particleSys = new ParticleSystem(ShaderManger.getInstance().getProgramHandle("texture_program"), mActivity);
 
-        BaseModel landing = new TexturedModel(ShaderManger.getInstance().getProgramHandle("texture_program"), activity, R.raw.landing, R.drawable.landing);
+        BaseModel landing = new TexturedModel(ShaderManger.getInstance().getProgramHandle("texture_program"), mActivity, R.raw.landing, R.drawable.landing);
         models.put("landing", landing);
         landing.scale(10,10,10);
         landing.translate(-38,-0.3f,30);
 
-        BaseModel terrain2 = new TexturedModel(ShaderManger.getInstance().getProgramHandle("texture_program"), activity, R.raw.terrain2, R.drawable.landing);
+        BaseModel terrain2 = new TexturedModel(ShaderManger.getInstance().getProgramHandle("texture_program"), mActivity, R.raw.terrain2, R.drawable.landing);
         models.put("terrain2", terrain2);
         terrain2.scale(10,10,10);
         terrain2.translate(-50,-0.3f,-60);
 
+//        BaseModel explosion = new TexturedModel(ShaderManger.getInstance().getProgramHandle("texture_program"),mActivity,R.raw.particle,R.drawable.explosion);
+//        models.put("explosion",explosion);
+//        explosion.translate(0,5,0);
+
 //        BaseModel flare = new TexturedModel(ShaderManger.getInstance().getProgramHandle("texture_program"),context, R.raw.cube, R.drawable.uv_checker_large);
 //        models.put("flare",flare);
 //        flare.translate(0,6,0);
+
+
         frameBuffer = TextureHelper.createFrameBuffer(400, 400);
-        activity.runOnUiThread(new Runnable() {
+        mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                ((MainActivity)activity).hideLoading();
+                ((MainActivity)mActivity).hideLoading();
             }
         });
 //        logic = new Logic();
@@ -114,13 +126,13 @@ public class Scene implements RotationGestureDetector.OnRotationGestureListener 
     public BaseModel getModel(String name){
         return models.get(name);
     }
-    public boolean isColiding(Vector3 pos){
+    public BaseModel isColiding(Vector3 pos){
         for(BaseModel model : models.values())
             if(model instanceof TexturedModel && !(model instanceof PlaneModel))
                 if(model.isCollidable())
                     if(((TexturedModel)model).getBounds().contains(pos))
-                        return true;
-        return false;
+                        return model;
+        return null;
     }
     float mPreviousX;
     float mPreviousY;
