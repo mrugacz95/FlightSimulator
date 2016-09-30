@@ -69,9 +69,9 @@ public class Scene implements RotationGestureDetector.OnRotationGestureListener 
         models.put("terrain",terrain);
 
 
-//        BaseModel sun = new TexturedModel(ShaderManger.getInstance().getProgramHandle("texture_program"), activity, R.raw.sphere, R.drawable.sun);
-//        models.put("sun", sun);
-//        sun.translate(60,60,60);
+        BaseModel sun = new TexturedModel(ShaderManger.getInstance().getProgramHandle("texture_program"), mActivity, R.raw.sphere, R.drawable.sun);
+        models.put("sun", sun);
+        sun.translate(20,20,20);
 
         //BaseModel particleSys = new ParticleSystem(ShaderManger.getInstance().getProgramHandle("texture_program"), mActivity);
 
@@ -113,15 +113,6 @@ public class Scene implements RotationGestureDetector.OnRotationGestureListener 
         for(BaseModel model : models.values()){
             model.draw();
         }
-        Camera.rotated=true;
-        GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, frameBuffer);
-        GLES30.glClear(GLES30.GL_DEPTH_BUFFER_BIT | GLES30.GL_COLOR_BUFFER_BIT);
-        GLES30.glViewport(0,0,width,height);
-        Camera.update();
-        for(BaseModel model : models.values()){
-            model.draw();
-        }
-        Camera.rotated=false;
     }
     public BaseModel getModel(String name){
         return models.get(name);

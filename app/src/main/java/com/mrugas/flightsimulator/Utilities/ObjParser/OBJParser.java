@@ -221,8 +221,6 @@ public class OBJParser {
 
     public FloatBuffer getVertexBuffer() {
         FloatBuffer vertexBuffer = ByteBuffer.allocateDirect(vPointer.size() * BYTES_PER_FLOAT * 3).order(ByteOrder.nativeOrder()).asFloatBuffer();
-//        vertexBuffer.put(Cube.vertices);
-//        vertexBuffer.position(0);
         List<Float> vertList = new ArrayList<>();
         for(int verPtr : vPointer){
             vertexBuffer.put(v.get(verPtr*3));
@@ -240,8 +238,6 @@ public class OBJParser {
 
     public FloatBuffer getUVBuffer() {
         FloatBuffer UVBuffer = ByteBuffer.allocateDirect(vPointer.size() * BYTES_PER_FLOAT * 2).order(ByteOrder.nativeOrder()).asFloatBuffer();
-//        vertexBuffer.put(Cube.vertices);
-//        vertexBuffer.position(0);
         List<Float> vertList = new ArrayList<>();
         for(int uvPtr : vtPointer){
             UVBuffer.put(vt.get(uvPtr*2));
@@ -278,6 +274,24 @@ public class OBJParser {
             front=Math.min(front,v.get(i+2));
         }
         return new Bounds(front,back,bottom,top,left,right);
+    }
+
+    public FloatBuffer getNormalBuffer() {
+        FloatBuffer normalBuffer = ByteBuffer.allocateDirect(vnPointer.size() * BYTES_PER_FLOAT * 3).order(ByteOrder.nativeOrder()).asFloatBuffer();
+        List<Float> vertList = new ArrayList<>();
+        for(int nPtr : vnPointer){
+            normalBuffer.put(vn.get(nPtr*3));
+            vertList.add(vn.get(nPtr*3));
+
+            normalBuffer.put(vn.get(nPtr*3+1));
+            vertList.add(vn.get(nPtr*3+1));
+
+            normalBuffer.put(vn.get(nPtr*3+2));
+            vertList.add(vn.get(nPtr*3+2));
+        }
+        normalBuffer.position(0);
+        return normalBuffer;
+
     }
 }
 

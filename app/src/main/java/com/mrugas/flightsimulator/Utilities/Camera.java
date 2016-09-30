@@ -28,6 +28,7 @@ public class Camera {
     static final float near = 1.0f;
     static final float far = 250.0f;
     static public boolean rotated = false;
+    private static Vector3 camPos;
     public static void update(){
 
         PlaneModel plane = ((PlaneModel)SceneManager.getInstance().getCurrentScene().getModel("plane"));
@@ -39,7 +40,7 @@ public class Camera {
         mat.rotate(plane.getRotation());
         mat.translate(new Vector3(0,0,0).mul(plane.getRotation()));
 
-        Vector3 camPos = new Vector3(pos).add(new Vector3(0,2,-3).mul(rot));
+        camPos = new Vector3(pos).add(new Vector3(0,2,-3).mul(rot));
         Matrix.setIdentityM(mViewMatrix,0);
         Vector3 up = new Vector3(0,1,0);
         Quaternion qup = new Quaternion(rot);
@@ -47,7 +48,7 @@ public class Camera {
         up.mul(rot);
         Matrix.setLookAtM(mViewMatrix, 0,  camPos.x,camPos.y,camPos.z, pos.x, pos.y,pos.z, up.x, up.y, up.z);
 
-        if(rotated) Matrix.scaleM(mViewMatrix,0,mViewMatrix,0,1f,-1f,1f);
+        //if(rotated) Matrix.scaleM(mViewMatrix,0,mViewMatrix,0,1f,-1f,1f);
         //mViewMatrix = mat.getValues();
     }
 

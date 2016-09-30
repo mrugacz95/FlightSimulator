@@ -27,6 +27,7 @@ public class Water extends TexturedModel {
     private int mProjectionMatrixHandle;
     private int mViewMatrixHandle;
     int mWaterBumpUnifromHandle;
+    int mMVPMatrixHandle;
     public Water(int programHandle, Context context) {
         super(programHandle, context);
     }

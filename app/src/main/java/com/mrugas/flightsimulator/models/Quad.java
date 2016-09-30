@@ -50,7 +50,7 @@ public class Quad extends TexturedModel {
 
 
         mPositionHandle = GLES30.glGetAttribLocation(programHandle, "a_Position");
-        mMVPMatrixHandle = GLES30.glGetUniformLocation(programHandle, "u_MVPMatrix");
+        //mMVPMatrixHandle = GLES30.glGetUniformLocation(programHandle, "u_MVPMatrix");
         mColorHandle = GLES30.glGetAttribLocation(programHandle, "a_Color");
         mGlobaColorHandle = GLES30.glGetAttribLocation(programHandle, "glob_Color");
         mTextureUniformHandle = GLES30.glGetUniformLocation(programHandle, "u_Texture");

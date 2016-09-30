@@ -77,24 +77,15 @@ public class PlaneModel extends TexturedModel {
             if(collider != landing){
                 explode();
                 position = currentPosition;
-                //speed=0;
             }
             else{
                 Float topOfLanding = landing.getBounds().getTopWithPos();
                 position = new Vector3(this.position.x,topOfLanding,position.z);
-                //rotation.setEulerAngles(rotation.getYaw(),rotation.getPitch(),rotation.getRoll());
             }
         }
-        /*translate(new Vector3(0,-1/(speed*120+20),0));
-        if(SceneManager.getInstance().getCurrentScene().isColiding(position)) {
-            position = currentPosition;
-            //rotation.setEulerAngles(rotation.getYaw(),0,rotation.getRoll());
-            //speed=0;
-        }*/
         if(position.y<0) {
             position.y = 0;
             explode();
-            //rotation= Quaternion.Euler(rotation.getPitch(),0,rotation.getRoll());
         }
         if(position.x>WORLD_SIZE) position.x=-WORLD_SIZE;
         if(position.x<-WORLD_SIZE) position.x=WORLD_SIZE;
@@ -122,7 +113,6 @@ public class PlaneModel extends TexturedModel {
     public void slowDown() {
         speed/=2;
         if(speed<0.02) speed=0;
-        //speed=Math.max(0,speed);
     }
     void explode(){
         Log.d("Explode","Boom");
