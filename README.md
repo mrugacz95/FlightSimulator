@@ -1,1 +1,1 @@
-Android Flying Simulator made with openGL :)
+Android Flight Simulator made with openGL :)
